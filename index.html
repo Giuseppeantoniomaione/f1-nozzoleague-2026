@@ -24,25 +24,25 @@ body{
   min-height:96px;border-bottom:1px solid rgba(237,17,24,.55);margin-bottom:14px;
 }
 .brand{display:flex;align-items:center}
-.brand-lockup{display:flex;align-items:center;gap:20px}
-.clear-lockup{min-width:0}
-.f1-clear{
-  color:var(--red);
+.brand-lockup{display:flex;align-items:center;gap:20px;min-width:0}
+.readable-brand{overflow:visible}
+.f1-readable{
+  color:#ed1118;
   font-family:Arial Black,Impact,Arial,sans-serif;
-  font-size:64px;
+  font-size:68px;
   font-weight:1000;
   font-style:italic;
-  letter-spacing:-5px;
   line-height:1;
-  padding-right:8px;
-  transform:skewX(-8deg);
-  text-shadow:0 0 14px rgba(237,17,24,.16)
+  letter-spacing:-5px;
+  min-width:92px;
+  text-align:left;
+  text-shadow:0 0 10px rgba(237,17,24,.12)
 }
 .brand-copy{
   line-height:.9;
   font-style:italic;
   font-weight:1000;
-  letter-spacing:-1.6px
+  letter-spacing:-1.5px
 }
 .brand-copy .name{
   font-size:39px;
@@ -119,8 +119,11 @@ tbody tr:hover td{background:#151819}
   .brand-copy .name{font-size:34px}.main-grid{grid-template-columns:1fr 1fr}.calendar{grid-column:1/-1}
 }
 @media(max-width:760px){
+  .f1-readable{font-size:44px;letter-spacing:-3px;min-width:62px}
+  .brand-copy .name{font-size:23px}
+  .brand-copy .year{font-size:18px}
   .app{padding:10px}.header{grid-template-columns:1fr 56px}.next{grid-column:1/-1;grid-row:2}
-  .f1-clear{font-size:42px;letter-spacing:-3px}.brand-copy .name{font-size:23px}.brand-copy .year{font-size:18px}
+  .brand-copy .name{font-size:23px}.brand-copy .year{font-size:18px}
   .main-grid{grid-template-columns:1fr}.calendar{grid-column:auto}.results-grid{grid-template-columns:1fr}
   .results-grid table:first-child{border-right:0}.panel-title{font-size:16px}
 }
@@ -130,19 +133,23 @@ tbody tr:hover td{background:#151819}
 <div class="app">
   <header class="header">
     <div class="brand">
-      <div class="brand-lockup clear-lockup">
-        <div class="f1-clear">F1</div>
+      <div class="brand-lockup readable-brand">
+        <div class="f1-readable">F1</div>
         <div class="brand-copy">
           <div class="name">NOZZO<span>LEAGUE</span></div>
           <div class="year">2026</div>
         </div>
       </div>
     </div>
-      </div>
-    </div></div></div>
+
     <div class="next">
-      <div><small>PROSSIMO GP</small><strong id="nextName">—</strong><b id="nextRound">ROUND —</b></div>
+      <div>
+        <small>PROSSIMO GP</small>
+        <strong id="nextName">—</strong>
+        <b id="nextRound">ROUND —</b>
+      </div>
     </div>
+
     <button class="gear" onclick="openEditor()" title="Modifica">⚙</button>
   </header>
 
@@ -170,7 +177,7 @@ tbody tr:hover td{background:#151819}
     </section>
   </main>
 
-  <footer class="footer">F1 NOZZOLEAGUE 2026 — STAGIONE UFFICIALE</footer>
+  <footer class="footer">F1 NOZZOLEAGUE 2026 — STAGIONE UFFICIALE<br><span id="lastUpdated" style="font-size:11px;letter-spacing:0;color:#8a8f92">Ultimo aggiornamento: —</span></footer>
 </div>
 
 <div class="modal" id="modal">
@@ -192,6 +199,7 @@ tbody tr:hover td{background:#151819}
     </div>
     <div class="actions">
       <button class="save" onclick="saveAll()">Salva</button>
+      <button class="minor" onclick="exportHtml()">Esporta HTML</button>
       <button class="minor" onclick="exportBackup()">Esporta backup</button>
       <button class="minor" onclick="document.getElementById('backupInput').click()">Importa backup</button>
       <input id="backupInput" hidden type="file" accept=".json" onchange="importBackup(event)">
@@ -222,7 +230,8 @@ const base={
   [17,"Stati Uniti","In attesa"],[18,"Messico","In attesa"],[19,"Brasile","In attesa"],[20,"Las Vegas","In attesa"],
   [21,"Qatar","In attesa"],[22,"Abu Dhabi","In attesa"]
  ],
- race:{name:"Nessuna gara",results:[]}
+ race:{name:"Nessuna gara",results:[]},
+ lastUpdated:""
 };
 let data=JSON.parse(localStorage.getItem("nozzoLeague2026")||JSON.stringify(base));
 const logo=t=>`<span class="team-logo" style="display:inline-flex;align-items:center;justify-content:center;width:42px;height:22px;background:#222;border-left:4px solid ${(teams[t]||"#777")};border-radius:4px;font-size:9px;font-weight:900;color:#fff;margin-right:8px">${t.split(" ").map(x=>x[0]).join("").slice(0,3)}</span>`;
@@ -238,6 +247,7 @@ function render(){
  const next=data.calendar.find(c=>c[2]==="Prossima")||data.calendar.find(c=>c[2]==="In attesa");
  nextName.textContent=next?next[1].toUpperCase():"CONCLUSO";nextRound.textContent=next?`ROUND ${next[0]}`:"";
  lastGp.textContent=data.race.name.toUpperCase();
+ lastUpdated.textContent="Ultimo aggiornamento: "+(data.lastUpdated||"—");
  const sorted=[...data.race.results].sort((a,b)=>a[0]-b[0]);
  if(!sorted.length){resultsGrid.innerHTML=`<div class="empty" style="grid-column:1/-1;padding:30px;text-align:center;color:var(--muted)">Nessun risultato inserito.</div>`;return}
  const mid=Math.ceil(sorted.length/2), chunks=[sorted.slice(0,mid),sorted.slice(mid)];
@@ -263,8 +273,42 @@ function saveAll(){
  document.querySelectorAll("[data-c]").forEach(el=>data.calendar[el.dataset.c][el.dataset.k]=el.dataset.k==="0"?Number(el.value)||0:el.value);
  document.querySelectorAll("[data-r]").forEach(el=>data.race.results[el.dataset.r][el.dataset.k]=["0","4"].includes(el.dataset.k)?Number(el.value)||0:el.value);
  data.race.name=raceName.value||"Nessuna gara";
+ data.lastUpdated=new Date().toLocaleString("it-IT",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
  localStorage.setItem("nozzoLeague2026",JSON.stringify(data));render();closeEditor()
 }
+
+function exportHtml(){
+  // Ensure latest editor values are saved before export
+  saveAll();
+
+  let source = document.documentElement.outerHTML;
+
+  // Embed current data as the new default state
+  const serialized = JSON.stringify(data);
+  source = source.replace(
+    /let data=JSON\.parse\(localStorage\.getItem\("nozzoLeague2026"\)\|\|JSON\.stringify\(base\)\);/,
+    `let data=JSON.parse(localStorage.getItem("nozzoLeague2026")||${JSON.stringify(serialized)});`
+  );
+
+  // Also replace the base object with the current data, so a new browser sees the same standings
+  const baseStart = source.indexOf("const base=");
+  const dataStart = source.indexOf('let data=JSON.parse', baseStart);
+  if(baseStart !== -1 && dataStart !== -1){
+    source = source.slice(0, baseStart) +
+      "const base=" + serialized + ";\n" +
+      source.slice(dataStart);
+  }
+
+  const blob = new Blob(["<!doctype html>\n"+source], {type:"text/html;charset=utf-8"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "index.html";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+
 function exportBackup(){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:"application/json"}));a.download="NozzoLeague_backup.json";a.click()}
 function importBackup(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{data=JSON.parse(r.result);localStorage.setItem("nozzoLeague2026",JSON.stringify(data));render();closeEditor()}catch{alert("Backup non valido")}};r.readAsText(f)}
 render();
