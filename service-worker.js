@@ -1,4 +1,4 @@
-const CACHE_NAME = "nozzoleague-home-fix-v3";
+const CACHE_NAME = "nozzoleague-home-definitiva-v4";
 const STATIC_ASSETS = [
   "./",
   "./index.html",
