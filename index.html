@@ -307,16 +307,24 @@ if(!data.teamPoints){
     data.teamPoints[d[1]] = (data.teamPoints[d[1]] || 0) + Number(d[2] || 0);
   });
 }
+officialGrid.forEach(([name,team])=>{
+  if(!data.drivers.some(d=>d[0]===name)){
+    data.drivers.push([name,team,0]);
+  }
+});
+leagueSubstitutions.forEach(s=>{
+  if(!data.drivers.some(d=>d[0]===s.human)){
+    data.drivers.push([s.human,s.team,0]);
+  }
+});
 
 const logo=t=>`<span class="team-logo" style="display:inline-flex;align-items:center;justify-content:center;width:42px;height:22px;background:#222;border-left:4px solid ${(teams[t]||"#777")};border-radius:4px;font-size:9px;font-weight:900;color:#fff;margin-right:8px">${t.split(" ").map(x=>x[0]).join("").slice(0,3)}</span>`;
 function render(){
- const leagueHumans = new Set(leagueSubstitutions.map(s=>s.human));
- const leagueDrivers = data.drivers
-   .filter(d=>leagueHumans.has(d[0]))
+ const allDrivers = [...data.drivers]
    .sort((a,b)=>Number(b[2])-Number(a[2]) || a[0].localeCompare(b[0]));
 
  driversTable.innerHTML=`<thead><tr><th>Pos</th><th>Pilota</th><th>Scuderia</th><th style="text-align:right">Punti</th></tr></thead><tbody>`+
- leagueDrivers.map((d,i)=>`<tr><td class="pos">${i+1}</td><td><b>${d[0]}</b></td><td><span class="team">${logo(d[1])}${d[1]}</span></td><td class="points">${d[2]}</td></tr>`).join("")+"</tbody>";
+ allDrivers.map((d,i)=>`<tr><td class="pos">${i+1}</td><td><b>${d[0]}</b></td><td><span class="team">${logo(d[1])}${d[1]}</span></td><td class="points">${d[2]}</td></tr>`).join("")+"</tbody>";
 
  const teamRows = Object.entries(data.teamPoints || {})
    .sort((a,b)=>Number(b[1])-Number(a[1]) || a[0].localeCompare(b[0]));
@@ -510,8 +518,6 @@ function completeGrandPrix(){
   };
   data.undoStack.push(snapshot);
 
-  const leagueHumans = new Set(leagueSubstitutions.map(s=>s.human));
-
   results.forEach((result,index)=>{
     result[4]=racePoints[index]||0;
 
@@ -519,16 +525,15 @@ function completeGrandPrix(){
     data.teamPoints[result[2]] =
       Number(data.teamPoints[result[2]] || 0) + Number(result[4] || 0);
 
-    // Driver championship points go only to NozzoLeague human drivers.
-    if(leagueHumans.has(result[1])){
-      let driver=data.drivers.find(d=>d[0]===result[1]);
-      if(!driver){
-        driver=[result[1],result[2],0];
-        data.drivers.push(driver);
-      }
-      driver[1]=result[2];
-      driver[2]=Number(driver[2]||0)+Number(result[4]||0);
+    // Driver points always go to the driver who actually raced.
+    // If the human is absent, the official F1 driver earns the points in their own name.
+    let driver=data.drivers.find(d=>d[0]===result[1]);
+    if(!driver){
+      driver=[result[1],result[2],0];
+      data.drivers.push(driver);
     }
+    driver[1]=result[2];
+    driver[2]=Number(driver[2]||0)+Number(result[4]||0);
   });
 
   data.race={
