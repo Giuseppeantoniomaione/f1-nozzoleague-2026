@@ -317,20 +317,26 @@ leagueSubstitutions.forEach(s=>{
     data.drivers.push([s.human,s.team,0]);
   }
 });
+leagueSubstitutions.forEach(s=>{
+  const officialDriver=data.drivers.find(d=>d[0]===s.official);
+  if(officialDriver) officialDriver[2]=0;
+});
 
 const logo=t=>`<span class="team-logo" style="display:inline-flex;align-items:center;justify-content:center;width:42px;height:22px;background:#222;border-left:4px solid ${(teams[t]||"#777")};border-radius:4px;font-size:9px;font-weight:900;color:#fff;margin-right:8px">${t.split(" ").map(x=>x[0]).join("").slice(0,3)}</span>`;
 function render(){
- const allDrivers = [...data.drivers]
+ const replacedOfficials = new Set(leagueSubstitutions.map(s=>s.official));
+ const visibleDrivers = data.drivers
+   .filter(d=>!replacedOfficials.has(d[0]))
    .sort((a,b)=>Number(b[2])-Number(a[2]) || a[0].localeCompare(b[0]));
 
  driversTable.innerHTML=`<thead><tr><th>Pos</th><th>Pilota</th><th>Scuderia</th><th style="text-align:right">Punti</th></tr></thead><tbody>`+
- allDrivers.map((d,i)=>`<tr><td class="pos">${i+1}</td><td><b>${d[0]}</b></td><td><span class="team">${logo(d[1])}${d[1]}</span></td><td class="points">${d[2]}</td></tr>`).join("")+"</tbody>";
+ visibleDrivers.map((d,i)=>`<tr><td class="pos">${i+1}</td><td><b>${d[0]}</b></td><td><span class="team">${logo(d[1])}${d[1]}</span></td><td class="points">${d[2]}</td></tr>`).join("")+"</tbody>";
 
  const teamRows = Object.entries(data.teamPoints || {})
    .sort((a,b)=>Number(b[1])-Number(a[1]) || a[0].localeCompare(b[0]));
 
  teamsTable.innerHTML=`<thead><tr><th>Pos</th><th>Scuderia</th><th style="text-align:right">Punti</th></tr></thead><tbody>`+
- teamRows.map((t,i)=>`<tr><td class="pos">${i+1}</td><td class="points">${t[1]}</td></tr>`).join("")+"</tbody>";
+ teamRows.map((t,i)=>`<tr><td class="pos">${i+1}</td><td>${logo(t[0])}<b>${t[0]}</b></td><td class="points">${t[1]}</td></tr>`).join("")+"</tbody>";
 
  calendarTable.innerHTML=`<thead><tr><th>Round</th><th>GP</th><th>Stato</th></tr></thead><tbody>`+
  data.calendar.map(c=>`<tr><td class="pos">${c[0]}</td><td><b>${c[1]}</b></td><td class="${c[2]==="Disputata"?"done":c[2]==="Prossima"?"next-state":"wait"}"><span class="dot"></span>${c[2]}</td></tr>`).join("")+"</tbody>";
@@ -525,15 +531,20 @@ function completeGrandPrix(){
     data.teamPoints[result[2]] =
       Number(data.teamPoints[result[2]] || 0) + Number(result[4] || 0);
 
-    // Driver points always go to the driver who actually raced.
-    // If the human is absent, the official F1 driver earns the points in their own name.
-    let driver=data.drivers.find(d=>d[0]===result[1]);
-    if(!driver){
-      driver=[result[1],result[2],0];
-      data.drivers.push(driver);
+    // Replaced official drivers act only as substitutes for constructor points.
+    // Example: if Mizzu is absent and Max Verstappen wins:
+    // Mizzu gets 0, Verstappen gets no driver-championship points,
+    // and Red Bull gets 25 constructor points.
+    const replacedOfficials = new Set(leagueSubstitutions.map(s=>s.official));
+    if(!replacedOfficials.has(result[1])){
+      let driver=data.drivers.find(d=>d[0]===result[1]);
+      if(!driver){
+        driver=[result[1],result[2],0];
+        data.drivers.push(driver);
+      }
+      driver[1]=result[2];
+      driver[2]=Number(driver[2]||0)+Number(result[4]||0);
     }
-    driver[1]=result[2];
-    driver[2]=Number(driver[2]||0)+Number(result[4]||0);
   });
 
   data.race={
