@@ -487,6 +487,34 @@ body.nl-navigation:not(.nl-page-open)::before{background:linear-gradient(180deg,
 .nz-upload-art img{display:block;width:100%;height:auto;max-height:260px;object-fit:contain;margin:auto;filter:drop-shadow(0 0 7px rgba(255,255,255,.16))}.nz-upload-art{padding:12px 6px;min-height:130px;display:flex;align-items:center;justify-content:center}
 /* Record qualifiche - compatto, smartphone verticale */
 .nz-qual-card{margin:12px 0;padding:13px 14px;border:1px solid #414548;border-left:3px solid #ed1118;border-radius:10px;background:rgba(10,12,14,.94);text-align:left;max-width:100%;overflow:hidden}.nz-qual-label{font-size:10px;font-weight:800;letter-spacing:.6px;color:#aeb3b8}.nz-qual-time{font-size:clamp(27px,8vw,39px);font-weight:950;font-style:italic;line-height:1.25;color:#fff;font-variant-numeric:tabular-nums}.nz-qual-driver{font-size:14px;font-weight:850;color:#fff}.nz-qual-team{font-size:12px;color:#aeb3b8;margin-top:2px}
+
+/* Menu 2027 approvato: nero/rosso, 2x2, safe-area iPhone */
+body.nl-navigation:not(.nl-page-open){background:#050506!important;background-image:none!important}
+body.nl-navigation:not(.nl-page-open)::before,body.nl-navigation:not(.nl-page-open)::after{display:none!important}
+body.nl-navigation:not(.nl-page-open) .app{padding-top:0!important}
+body.nl-navigation:not(.nl-page-open) .header{position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);right:16px;width:52px;min-height:0;height:46px;margin:0;padding:0;display:block;border:0;z-index:8;pointer-events:none}
+body.nl-navigation:not(.nl-page-open) .header .brand,body.nl-navigation:not(.nl-page-open) .header .next{display:none!important}
+body.nl-navigation:not(.nl-page-open) .header .gear{pointer-events:auto;display:block;width:44px;height:44px;border:1px solid #e81b32;border-radius:12px;background:rgba(9,9,12,.94);box-shadow:0 0 12px #ef172b55;color:#fff;font-size:24px}
+body.nl-navigation:not(.nl-page-open) .nl-menu{padding:calc(env(safe-area-inset-top,0px) + 74px) 8px 34px!important;max-width:680px;margin:0 auto;min-height:100dvh}
+.nl-brand2027{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;margin:0 auto 33px;padding:0 10px}
+.nl-f1mark{display:block;width:clamp(90px,24vw,144px);height:auto;margin:0 auto 12px;filter:drop-shadow(0 0 8px #f20d2530)}
+.nl-brand-name{font-family:Arial Black,Impact,Arial,sans-serif;font-size:clamp(27px,8.3vw,56px);font-weight:1000;font-style:italic;letter-spacing:-1.8px;line-height:1;color:#fff;white-space:nowrap;text-shadow:0 3px 12px #000}
+.nl-brand-year{width:min(88%,390px);display:flex;align-items:center;gap:14px;margin:5px auto 0;color:#f1122c;font:italic 1000 clamp(31px,9vw,58px)/1 Arial Black,Impact,Arial,sans-serif}
+.nl-brand-year:before,.nl-brand-year:after{content:"";height:2px;flex:1;background:linear-gradient(90deg,transparent,#f11a31);box-shadow:0 0 9px #ff173a}
+.nl-brand-year:after{transform:scaleX(-1)}
+.nl-section-heading{margin:0 0 24px!important;padding:0!important;border:0!important;display:flex!important;align-items:center!important;justify-content:center!important;text-align:center}
+.nl-section-heading span{font:italic 950 clamp(18px,5.1vw,31px)/1.15 Arial Black,Impact,Arial,sans-serif!important;letter-spacing:-.6px;white-space:nowrap}
+.nl-section-heading:before,.nl-section-heading:after{content:"///";font:900 23px Arial,sans-serif;color:#f1122c;letter-spacing:-3px;margin:0 12px}
+.nl-menu-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important}
+.nl-menu-grid .nl-tile{min-width:0;min-height:170px!important;padding:14px 6px 16px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;text-align:center!important;gap:0!important;border:2px solid #ee142c!important;border-radius:17px!important;background:linear-gradient(145deg,#200407,#08080a 63%)!important;box-shadow:0 0 13px #f018343a,inset 0 0 18px #f0183419!important;position:relative}
+.nl-menu-grid .nl-tile::before{display:none!important}
+.nl-menu-grid .nl-tile::after{display:block!important;content:"";position:absolute;right:0;bottom:0;width:38%;height:32%;border:0;border-radius:0;background:repeating-linear-gradient(135deg,transparent 0 11px,#e80b251f 12px 17px,transparent 18px 23px)!important;clip-path:polygon(100% 0,100% 100%,0 100%);box-shadow:none!important;pointer-events:none}
+.nl-menu-grid .nl-tile .nl-tile-icon{display:block!important;font-size:37px!important;line-height:1.1!important;color:#fa1b35!important;margin:0 0 11px!important;filter:drop-shadow(0 0 6px #e9163244)}
+.nl-menu-grid .nl-tile .nl-tile-label{font:900 clamp(12px,3.4vw,19px)/1.16 Arial,Segoe UI,sans-serif!important;letter-spacing:0!important;color:#fff!important;position:relative;z-index:1}
+.nl-menu-grid .nl-tile .nl-tile-arrow{position:relative!important;right:auto!important;bottom:auto!important;display:block;margin:9px 0 0;font-size:27px;line-height:1;color:#f21631;z-index:1}
+.nl-menu-footer{margin-top:26px}
+@media(max-width:390px){.nl-brand-name{font-size:7.8vw}.nl-menu-grid .nl-tile{min-height:155px!important}.nl-menu-grid .nl-tile .nl-tile-icon{font-size:33px!important}.nl-section-heading:before,.nl-section-heading:after{margin:0 7px}}
+@media(min-width:700px){body.nl-navigation:not(.nl-page-open) .nl-menu{padding-top:calc(env(safe-area-inset-top,0px) + 82px)!important}.nl-menu-grid .nl-tile{min-height:205px!important}}
 </style>
 
 <link rel="manifest" href="manifest.json">
@@ -589,7 +617,7 @@ if ('serviceWorker' in navigator) {
         <div class="f1-readable">F1</div>
         <div class="brand-copy">
           <div class="name">NOZZO<span>LEAGUE</span></div>
-          <div class="year">2026</div>
+          <div class="year">2027</div>
         </div>
       </div>
     </div>
@@ -606,13 +634,17 @@ if ('serviceWorker' in navigator) {
   </header>
 
 <nav id="nlMenu" class="nl-menu" aria-label="Menu NozzoLeague">
- <div class="nl-hero"><div class="nl-hero-top"><span class="nl-kicker">THE NEXT CHAPTER <i></i> SEASON 2027</span><span class="nl-live">● NOZZOLEAGUE</span></div><div class="nl-hero-flag">27</div><div class="nl-hero-copy"><span class="nl-hero-eyebrow">IL CAMPIONATO CONTINUA</span><h1>NOZZO<span>LEAGUE</span><strong>2027</strong></h1><p>OTTO PILOTI. UNA SOLA GLORIA.</p></div><div class="nl-hero-bottom"><span>RACE WEEKEND EXPERIENCE</span><span>◆ ◆ ◆</span></div></div>
- <div class="nl-section-heading"><span>ESPLORA IL PADDOCK</span><small>SELEZIONA UNA SEZIONE</small></div>
+ <div class="nl-brand2027" aria-label="F1 NozzoLeague 2027">
+   <svg class="nl-f1mark" viewBox="0 0 210 68" role="img" aria-label="F1" xmlns="http://www.w3.org/2000/svg"><path fill="#f20d25" d="M0 15H121L108 29H0ZM0 36H101L88 50H0ZM132 15H210L158 68H112L151 29H119Z"/><path fill="#f20d25" d="M0 57H80L69 68H0Z"/></svg>
+   <div class="nl-brand-name">NOZZOLEAGUE</div>
+   <div class="nl-brand-year"><span>2027</span></div>
+ </div>
+ <div class="nl-section-heading"><span>ESPLORA IL PADDOCK</span></div>
  <div class="nl-menu-grid">
- <button class="nl-tile" onclick="nlShow('drivers')"><span class="nl-tile-index">01 / STANDINGS</span><span class="nl-tile-icon">♛</span><span class="nl-tile-label">CLASSIFICA<br>PILOTI</span><span class="nl-tile-arrow">↗</span></button>
- <button class="nl-tile" onclick="nlShow('teams')"><span class="nl-tile-index">02 / TEAMS</span><span class="nl-tile-icon">◈</span><span class="nl-tile-label">CLASSIFICA<br>COSTRUTTORI</span><span class="nl-tile-arrow">↗</span></button>
- <button class="nl-tile" onclick="nlShow('calendar')"><span class="nl-tile-index">03 / SEASON</span><span class="nl-tile-icon">▦</span><span class="nl-tile-label">CALENDARIO<br>2027</span><span class="nl-tile-arrow">↗</span></button>
- <button class="nl-tile" onclick="nlShow('last')"><span class="nl-tile-index">04 / RESULTS</span><span class="nl-tile-icon">⚑</span><span class="nl-tile-label">ULTIMA<br>GARA</span><span class="nl-tile-arrow">↗</span></button>
+ <button class="nl-tile" onclick="nlShow('drivers')"><span class="nl-tile-icon">♜</span><span class="nl-tile-label">CLASSIFICA<br>PILOTI</span><span class="nl-tile-arrow">➜</span></button>
+ <button class="nl-tile" onclick="nlShow('teams')"><span class="nl-tile-icon">🏎</span><span class="nl-tile-label">CLASSIFICA<br>COSTRUTTORI</span><span class="nl-tile-arrow">➜</span></button>
+ <button class="nl-tile" onclick="nlShow('calendar')"><span class="nl-tile-icon">▦</span><span class="nl-tile-label">CALENDARIO<br>2027</span><span class="nl-tile-arrow">➜</span></button>
+ <button class="nl-tile" onclick="nlShow('last')"><span class="nl-tile-icon">⚑</span><span class="nl-tile-label">ULTIMA<br>GARA</span><span class="nl-tile-arrow">➜</span></button>
  </div><div class="nl-menu-footer"><span>NOZZOLEAGUE / 2027</span><span>BUONA GARA ◢</span></div>
 </nav><div id="nlBack" class="nl-back" hidden><button onclick="nlShow('menu')">‹ TORNA AL MENU</button></div>
   <main>
