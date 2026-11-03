@@ -2,7 +2,7 @@
 <html lang="it"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>F1 NozzoLeague 2026 — v2.1 Stable</title>
+<title>F1 NozzoLeague 2027 — Circuiti reali</title>
 <style>
 :root{
   --bg:#050606;--panel:#101213;--panel2:#171a1c;--line:#34383a;
@@ -484,7 +484,7 @@ body.nl-navigation:not(.nl-page-open)::before{background:linear-gradient(180deg,
 .nz-track-art path{fill:none;stroke:#f0f0f2;stroke-width:7;stroke-linejoin:round;stroke-linecap:round;filter:drop-shadow(0 0 5px #f12a46)}
 .nz-track-caption{font-size:10px;color:#a7a7ad;text-align:center;margin-top:-7px}
 @media(max-width:450px){.nz-sprint-panel{padding:10px}.nz-sprint-table select{font-size:12px}}
-</style>
+.nz-upload-art img{display:block;width:100%;height:auto;max-height:260px;object-fit:contain;margin:auto;filter:drop-shadow(0 0 7px rgba(255,255,255,.16))}.nz-upload-art{padding:12px 6px;min-height:130px;display:flex;align-items:center;justify-content:center}</style>
 
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
@@ -987,8 +987,8 @@ function nozzoCircuitDetails(round){
   <div class="nc-location">📍 ${t.city} · ${t.country}</div>
   ${t.sprint?'<span class="nc-sprint">SPRINT</span>':''}
   ${nozzoTrackShape(round)}
-  <div class="nc-stats">${stat('Lunghezza',t.km ? t.km.toLocaleString('it-IT',{minimumFractionDigits:3})+' km':null)}${stat('Curve',t.turns)}${stat('Giri GP',t.laps)}${stat('Distanza GP',t.km&&t.laps?(t.km*t.laps).toLocaleString('it-IT',{minimumFractionDigits:1,maximumFractionDigits:1})+' km':null)}</div>
-  <p class="nc-note">Dati indicativi del tracciato GP; possono variare in base alla versione del gioco e alle impostazioni di gara.</p>
+  <div class="nc-stats">${stat('Lunghezza',t.km ? t.km.toLocaleString('it-IT',{minimumFractionDigits:3})+' km':null)}${stat('Curve',t.turns)}${stat('Giri GP · 50%',t.laps ? Math.ceil(t.laps/2) : null)}${stat('Distanza GP · 50%',t.km&&t.laps?(t.km*Math.ceil(t.laps/2)).toLocaleString('it-IT',{minimumFractionDigits:1,maximumFractionDigits:1})+' km':null)}</div>
+  <p class="nc-note">Giri e distanza calcolati per gara al 50% (arrotondamento per eccesso). Le caratteristiche del tracciato possono variare nel gioco.</p>
   ${nzSprintDetails(round)}
   ${c&&c[2]==='Disputata'?`<button class="nc-results" onclick="nozzoCloseCircuit();openRaceHistory(${Number(round)})">VEDI RISULTATI GP</button>`:''}
  `;
@@ -999,36 +999,60 @@ document.addEventListener('click',function(e){const row=e.target.closest('[data-
 document.addEventListener('keydown',function(e){if((e.key==='Enter'||e.key===' ')&&e.target.matches('[data-circuit-round]')){e.preventDefault();nozzoCircuitDetails(e.target.dataset.circuitRound);}});
 
 
-// Sagome schematiche illustrative; non sono mappe topografiche ufficiali.
-const nzTrackPaths=[
-'M 35 100 L 60 35 Q 90 18 110 46 L 145 25 L 215 38 L 245 75 L 225 125 L 185 135 L 165 110 L 120 130 L 65 125 Z',
-'M 38 110 L 85 105 L 105 40 L 170 30 L 205 48 L 238 90 L 210 135 L 155 120 L 120 145 L 65 140 Z',
-'M 45 95 L 90 95 L 95 40 L 150 40 L 160 75 L 205 75 L 235 120 L 180 135 L 135 115 L 90 140 L 45 125 Z',
-'M 45 120 L 65 45 L 135 45 L 165 75 L 220 70 L 240 110 L 195 145 L 140 130 L 90 150 Z',
-'M 45 130 L 50 60 L 95 35 L 155 55 L 205 30 L 240 75 L 220 135 L 150 150 L 105 120 Z',
-'M 38 115 L 60 55 L 120 35 L 180 48 L 230 90 L 225 125 L 175 140 L 130 115 L 80 145 Z',
-'M 40 80 L 85 40 L 140 60 L 190 35 L 235 70 L 225 115 L 170 145 L 125 120 L 75 140 Z',
-'M 45 130 L 65 60 L 100 35 L 120 80 L 170 60 L 220 75 L 235 115 L 175 140 L 100 125 Z',
-'M 35 90 L 75 35 L 130 50 L 160 90 L 220 70 L 240 115 L 190 140 L 130 120 L 70 145 Z',
-'M 40 100 L 75 50 L 135 30 L 180 55 L 220 45 L 240 110 L 205 145 L 145 130 L 95 145 Z',
-'M 45 110 L 75 45 L 135 40 L 165 75 L 230 65 L 240 120 L 195 140 L 140 120 L 85 145 Z',
-'M 45 120 L 55 65 L 105 35 L 140 75 L 190 35 L 235 65 L 225 120 L 185 145 L 115 130 Z',
-'M 35 105 L 70 50 L 125 35 L 175 55 L 230 80 L 210 135 L 160 145 L 125 115 L 70 140 Z',
-'M 35 110 L 60 60 L 120 35 L 160 60 L 215 45 L 240 100 L 205 140 L 145 125 L 95 145 Z',
-'M 45 115 L 65 45 L 115 35 L 165 70 L 220 55 L 235 110 L 180 145 L 125 120 L 80 145 Z',
-'M 35 105 L 75 40 L 135 35 L 185 55 L 235 105 L 195 140 L 130 125 L 75 145 Z',
-'M 45 130 L 60 55 L 115 35 L 155 65 L 220 50 L 235 110 L 195 145 L 125 125 L 85 145 Z',
-'M 40 110 L 65 55 L 125 40 L 175 55 L 225 80 L 230 125 L 175 145 L 130 115 L 80 145 Z',
-'M 40 105 L 85 45 L 140 35 L 185 65 L 235 75 L 215 135 L 165 145 L 125 115 L 75 145 Z',
-'M 35 110 L 70 55 L 125 40 L 170 70 L 225 45 L 240 105 L 200 145 L 130 125 L 75 145 Z',
-'M 45 110 L 70 40 L 125 45 L 175 35 L 225 70 L 235 115 L 190 145 L 130 125 L 75 145 Z',
-'M 40 110 L 75 50 L 125 35 L 175 55 L 225 70 L 235 125 L 180 145 L 125 120 L 80 145 Z',
-'M 45 105 L 75 50 L 125 40 L 170 60 L 225 50 L 235 115 L 190 145 L 125 125 L 80 145 Z',
-'M 40 110 L 70 45 L 130 35 L 175 65 L 230 75 L 225 125 L 180 145 L 130 115 L 80 145 Z',
-'M 45 125 L 75 45 L 125 40 L 170 60 L 225 45 L 235 115 L 195 145 L 145 125 L 95 145 Z'];
+// Geometrie reali da GeoJSON (SergioSediq/f1-circuits, MIT).
+// Sono caricate via HTTPS; non utilizziamo sagome inventate come fallback.
+const nzGeoURL='https://raw.githubusercontent.com/SergioSediq/f1-circuits/main/f1-circuits.geojson';
+const nzTrackLocations=['Melbourne','Shanghai','Suzuka','Sakhir','Jeddah','Miami','Montreal','Monaco','Barcelona','Spielberg','Silverstone','Spa-Francorchamps','Budapest','Zandvoort','Monza','Madrid','Baku','Singapore','Austin','Mexico City','Sao Paulo','Las Vegas','Lusail','Yas Marina','Imola'];
+let nzGeoPromise=null;
+function nzGeoFeatures(){
+ if(!nzGeoPromise)nzGeoPromise=fetch(nzGeoURL).then(r=>{if(!r.ok)throw new Error('Dati tracciati non disponibili');return r.json()}).then(j=>j.features||[]).catch(e=>{nzGeoPromise=null;throw e});
+ return nzGeoPromise;
+}
+function nzCircuitCoords(feature){
+ const g=feature?.geometry;if(!g)return null;
+ if(g.type==='LineString')return g.coordinates;
+ if(g.type==='MultiLineString')return g.coordinates.reduce((a,b)=>b.length>a.length?b:a,[]);
+ return null;
+}
+
+// Sagome caricate direttamente dagli utenti: nessuna richiesta esterna per questi GP.
 function nozzoTrackShape(round){
- const d=nzTrackPaths[Number(round)-1]; if(!d)return '';
- return `<div class="nz-track-art"><svg viewBox="0 0 280 180" role="img" aria-label="Sagoma illustrativa del circuito"><path d="${d}"/></svg></div><div class="nz-track-caption">Schema illustrativo · sagoma reale non ancora disponibile</div>`;
+ if(Number(round)===1){
+  return `<div class="nz-track-art nz-real-art nz-upload-art"><img src="assets/tracks/albert-park-user.png" alt="Tracciato Albert Park, Australia" loading="eager"></div><div class="nz-track-caption">Albert Park · immagine fornita dalla lega</div>`;
+ }
+ return nzTrackShape(round);
+}
+
+function nzTrackShape(round){
+ const n=Number(round);
+ const id='nz-track-real-'+n;
+ // L'elemento e' inserito prima che fetch termini; si usa un microtask dopo il render.
+ queueMicrotask(()=>nzLoadRealTrack(n,id));
+ return `<div class="nz-track-art nz-real-art" id="${id}"><span style="color:#a9adb0;font-size:12px">Caricamento tracciato reale…</span></div><div class="nz-track-caption">Tracciato reale · dati cartografici Open Source</div>`;
+}
+async function nzLoadRealTrack(round,id){
+ const el=document.getElementById(id);if(!el)return;
+ try{
+  const features=await nzGeoFeatures();
+  const loc=nzTrackLocations[round-1];
+  const norm=x=>String(x||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
+  const aliases={ 'Spa-Francorchamps':['Spa Francorchamps'], 'Sao Paulo':['Sao Paulo','São Paulo','Sao Paulo'], 'Yas Marina':['Yas Marina','Abu Dhabi'], 'Montreal':['Montreal','Montréal'], 'Mexico City':['Mexico City','Mexico'], 'Las Vegas':['Las Vegas'], 'Lusail':['Lusail','Losail'] };
+  const accepted=[loc,...(aliases[loc]||[])].map(norm);
+  const feature=features.find(f=>accepted.includes(norm(f.properties?.Location))) || features.find(f=>accepted.some(x=>norm(f.properties?.Name).includes(x)));
+  const coords=nzCircuitCoords(feature);
+  if(!coords||coords.length<4)throw new Error('Geometria non trovata');
+  const lat0=coords.reduce((a,p)=>a+p[1],0)/coords.length;
+  const scaleX=Math.cos(lat0*Math.PI/180);
+  const pts=coords.map(p=>[p[0]*scaleX,-p[1]]);
+  const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]);
+  const minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys);
+  const w=Math.max(maxX-minX,1e-9),h=Math.max(maxY-minY,1e-9);
+  const sc=Math.min(240/w,144/h);
+  const ox=(280-w*sc)/2,oy=(180-h*sc)/2;
+  const d=pts.map((p,i)=>(i?'L':'M')+(ox+(p[0]-minX)*sc).toFixed(2)+' '+(oy+(p[1]-minY)*sc).toFixed(2)).join(' ');
+  if(!el.isConnected)return;
+  el.innerHTML=`<svg viewBox="0 0 280 180" role="img" aria-label="Tracciato reale di ${String(loc).replace(/&/g,'&amp;')}"><path d="${d}"/></svg>`;
+ }catch(e){if(el.isConnected)el.innerHTML='<span style="color:#a9adb0;font-size:12px">Sagoma non disponibile offline. Serve una connessione Internet.</span>';}
 }
 function nzSprintDetails(round){
  const t=nozzoCircuit(round); if(!t?.sprint)return '';
