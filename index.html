@@ -554,6 +554,17 @@ html,body{margin:0!important;min-height:100%!important;background:#08101e!import
  box-shadow:0 0 7px #ff2448,0 0 20px rgba(255,25,54,.8)!important;
 }
 @media(prefers-reduced-motion:reduce){.home-poster .enter-league::after{opacity:.6!important}.home-poster .enter-league::before{opacity:.8!important;transform:none!important}}
+
+/* CTA sotto il 2027, sopra la monoposto, con frecce laterali. */
+.home-poster .enter-league,.home-poster .enter-league:hover,.home-poster .enter-league:active{
+ top:84.0%!important;height:5.6%!important;min-height:43px!important;max-height:67px!important;
+ width:94%!important;gap:clamp(8px,2.5vw,20px)!important;padding:0 5px 10px!important;
+ font-size:clamp(13px,4.1vw,21px)!important;
+}
+.home-poster .enter-league .nz-cta-label{white-space:nowrap;position:relative;z-index:2}
+.home-poster .enter-league .nz-arrow{color:#ff172d;font-size:1.55em;font-style:normal;font-weight:1000;letter-spacing:-.25em;padding-right:.25em;text-shadow:0 0 9px #ef1028,0 0 17px #e10820;position:relative;z-index:2;animation:nzArrowPulse 3.8s ease-in-out infinite}
+@keyframes nzArrowPulse{0%,100%{opacity:.85;filter:brightness(1)}50%{opacity:1;filter:brightness(1.5)}}
+@media(prefers-reduced-motion:reduce){.home-poster .enter-league .nz-arrow{animation:none!important}}
 </style><script id="nozzo-no-serviceworker">
 // Disable obsolete offline worker without deleting league results stored locally.
 if ('serviceWorker' in navigator) {
@@ -568,7 +579,7 @@ if ('serviceWorker' in navigator) {
 
 <div class="home-screen" id="homeScreen">
   <div class="home-bg-blur"></div>
-  <div class="home-poster"><button class="enter-league" onclick="enterLeague()" aria-label="Entra nella lega">ENTRA NELLA LEGA ❯❯</button></div>
+  <div class="home-poster"><button class="enter-league" onclick="enterLeague()" aria-label="Entra nella lega"><span class="nz-arrow" aria-hidden="true">❯❯</span><span class="nz-cta-label">ENTRA NELLA LEGA</span><span class="nz-arrow" aria-hidden="true">❯❯</span></button></div>
 </div>
 
 <div class="app">
