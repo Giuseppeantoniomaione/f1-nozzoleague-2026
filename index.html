@@ -1015,44 +1015,12 @@ function nzCircuitCoords(feature){
  return null;
 }
 
-// Sagome caricate direttamente dagli utenti: nessuna richiesta esterna per questi GP.
+// Sagome PNG locali fornite dalla lega, disponibili anche offline.
+const nzLocalTrackFiles=['melbourne','shanghai','suzuka','sakhir','jeddah','miami','montreal','monaco','catalunya','spielberg','silverstone','spa','hungaroring','zandvoort','monza','madrid','baku','singapore','austin','mexico','interlagos','las-vegas','lusail','yas-marina','imola'];
 function nozzoTrackShape(round){
- if(Number(round)===1){
-  return `<div class="nz-track-art nz-real-art nz-upload-art"><img src="assets/tracks/albert-park-user.png" alt="Tracciato Albert Park, Australia" loading="eager"></div><div class="nz-track-caption">Albert Park · immagine fornita dalla lega</div>`;
- }
- return nzTrackShape(round);
-}
-
-function nzTrackShape(round){
- const n=Number(round);
- const id='nz-track-real-'+n;
- // L'elemento e' inserito prima che fetch termini; si usa un microtask dopo il render.
- queueMicrotask(()=>nzLoadRealTrack(n,id));
- return `<div class="nz-track-art nz-real-art" id="${id}"><span style="color:#a9adb0;font-size:12px">Caricamento tracciato reale…</span></div><div class="nz-track-caption">Tracciato reale · dati cartografici Open Source</div>`;
-}
-async function nzLoadRealTrack(round,id){
- const el=document.getElementById(id);if(!el)return;
- try{
-  const features=await nzGeoFeatures();
-  const loc=nzTrackLocations[round-1];
-  const norm=x=>String(x||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
-  const aliases={ 'Spa-Francorchamps':['Spa Francorchamps'], 'Sao Paulo':['Sao Paulo','São Paulo','Sao Paulo'], 'Yas Marina':['Yas Marina','Abu Dhabi'], 'Montreal':['Montreal','Montréal'], 'Mexico City':['Mexico City','Mexico'], 'Las Vegas':['Las Vegas'], 'Lusail':['Lusail','Losail'] };
-  const accepted=[loc,...(aliases[loc]||[])].map(norm);
-  const feature=features.find(f=>accepted.includes(norm(f.properties?.Location))) || features.find(f=>accepted.some(x=>norm(f.properties?.Name).includes(x)));
-  const coords=nzCircuitCoords(feature);
-  if(!coords||coords.length<4)throw new Error('Geometria non trovata');
-  const lat0=coords.reduce((a,p)=>a+p[1],0)/coords.length;
-  const scaleX=Math.cos(lat0*Math.PI/180);
-  const pts=coords.map(p=>[p[0]*scaleX,-p[1]]);
-  const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]);
-  const minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys);
-  const w=Math.max(maxX-minX,1e-9),h=Math.max(maxY-minY,1e-9);
-  const sc=Math.min(240/w,144/h);
-  const ox=(280-w*sc)/2,oy=(180-h*sc)/2;
-  const d=pts.map((p,i)=>(i?'L':'M')+(ox+(p[0]-minX)*sc).toFixed(2)+' '+(oy+(p[1]-minY)*sc).toFixed(2)).join(' ');
-  if(!el.isConnected)return;
-  el.innerHTML=`<svg viewBox="0 0 280 180" role="img" aria-label="Tracciato reale di ${String(loc).replace(/&/g,'&amp;')}"><path d="${d}"/></svg>`;
- }catch(e){if(el.isConnected)el.innerHTML='<span style="color:#a9adb0;font-size:12px">Sagoma non disponibile offline. Serve una connessione Internet.</span>';}
+ const slug=nzLocalTrackFiles[Number(round)-1];
+ if(!slug)return '<div class="nz-track-caption">Tracciato non disponibile</div>';
+ return `<div class="nz-track-art nz-real-art nz-upload-art"><img src="assets/tracks/${slug}.png" alt="Sagoma del circuito ${slug}" loading="eager" style="max-width:100%;max-height:100%;object-fit:contain"></div><div class="nz-track-caption">Tracciato · immagine fornita dalla lega</div>`;
 }
 function nzSprintDetails(round){
  const t=nozzoCircuit(round); if(!t?.sprint)return '';
@@ -1128,11 +1096,10 @@ function render(){
  teamsTable.innerHTML=`<thead><tr><th>Pos</th><th>Scuderia</th><th style="text-align:right">Punti</th></tr></thead><tbody>`+
  teamRows.map((t,i)=>`<tr><td class="pos">${i+1}</td><td>${logo(t[0])}<b>${t[0]}</b></td><td class="points">${t[1]}</td></tr>`).join("")+"</tbody>";
 
- calendarTable.innerHTML=`<thead><tr><th>Calendario</th></tr></thead><tbody>`+
+ calendarTable.innerHTML=`<thead><tr><th>Round</th><th>Paese · Tracciato</th><th>Stato</th></tr></thead><tbody>`+
  data.calendar.map(c=>{
    const t=nozzoCircuit(c[0]);
-   const label=t?`${t.name.toLowerCase()} - ${t.city.toLowerCase()}`:String(c[1]).toLowerCase();
-   return `<tr class="nc-clickable" data-circuit-round="${Number(c[0])}" onclick="nozzoCircuitDetails(${Number(c[0])})" tabindex="0" role="button" aria-label="Apri informazioni circuito"><td style="padding:15px 18px;font-weight:800;text-transform:capitalize">${label}</td></tr>`;
+   return `<tr class="nc-clickable" data-circuit-round="${Number(c[0])}" onclick="nozzoCircuitDetails(${Number(c[0])})" tabindex="0" role="button" aria-label="Apri informazioni circuito"><td class="pos">${c[0]}</td><td><div class="nc-gp">${t?t.flag+' ':''}${t?t.country+' - '+t.city:c[1]}</div>${t&&t.sprint?'<span class="nc-sprint">SPRINT</span>':''}</td><td class="${c[2]==='Disputata'?'done':c[2]==='Prossima'?'next-state':'wait'}"><span class="dot"></span>${c[2]}</td></tr>`;
  }).join("")+"</tbody>";
 
  const next=data.calendar.find(c=>c[2]==="Prossima")||data.calendar.find(c=>c[2]==="In attesa");
