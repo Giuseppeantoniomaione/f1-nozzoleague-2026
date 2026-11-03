@@ -989,7 +989,7 @@ function nozzoCircuitDetails(round){
   ${nozzoTrackShape(round)}
   <div class="nc-stats">${stat('Lunghezza',t.km ? t.km.toLocaleString('it-IT',{minimumFractionDigits:3})+' km':null)}${stat('Curve',t.turns)}${stat('Giri GP',t.laps)}${stat('Distanza GP',t.km&&t.laps?(t.km*t.laps).toLocaleString('it-IT',{minimumFractionDigits:1,maximumFractionDigits:1})+' km':null)}</div>
   <p class="nc-note">Dati indicativi del tracciato GP; possono variare in base alla versione del gioco e alle impostazioni di gara.</p>
-  ${nozzoSprintDetails(round)}
+  ${nzSprintDetails(round)}
   ${c&&c[2]==='Disputata'?`<button class="nc-results" onclick="nozzoCloseCircuit();openRaceHistory(${Number(round)})">VEDI RISULTATI GP</button>`:''}
  `;
  const modal=document.getElementById('ncModal'); if(!modal){alert('Scheda circuito non disponibile');return;} document.body.appendChild(modal);modal.classList.add('open');modal.style.setProperty('display','flex','important');
