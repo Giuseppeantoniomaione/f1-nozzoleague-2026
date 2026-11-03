@@ -1128,10 +1128,11 @@ function render(){
  teamsTable.innerHTML=`<thead><tr><th>Pos</th><th>Scuderia</th><th style="text-align:right">Punti</th></tr></thead><tbody>`+
  teamRows.map((t,i)=>`<tr><td class="pos">${i+1}</td><td>${logo(t[0])}<b>${t[0]}</b></td><td class="points">${t[1]}</td></tr>`).join("")+"</tbody>";
 
- calendarTable.innerHTML=`<thead><tr><th>Round</th><th>Paese · Tracciato</th><th>Stato</th></tr></thead><tbody>`+
+ calendarTable.innerHTML=`<thead><tr><th>Calendario</th></tr></thead><tbody>`+
  data.calendar.map(c=>{
    const t=nozzoCircuit(c[0]);
-   return `<tr class="nc-clickable" data-circuit-round="${Number(c[0])}" onclick="nozzoCircuitDetails(${Number(c[0])})" tabindex="0" role="button" aria-label="Apri informazioni circuito"><td class="pos">${c[0]}</td><td><div class="nc-gp">${t?t.flag+' ':''}${t?t.country+' — '+t.name:c[1]}</div><div class="nc-track">${t?t.circuit:''}</div>${t&&t.sprint?'<span class="nc-sprint">SPRINT</span>':''}</td><td class="${c[2]==='Disputata'?'done':c[2]==='Prossima'?'next-state':'wait'}"><span class="dot"></span>${c[2]}</td></tr>`;
+   const label=t?`${t.name.toLowerCase()} - ${t.city.toLowerCase()}`:String(c[1]).toLowerCase();
+   return `<tr class="nc-clickable" data-circuit-round="${Number(c[0])}" onclick="nozzoCircuitDetails(${Number(c[0])})" tabindex="0" role="button" aria-label="Apri informazioni circuito"><td style="padding:15px 18px;font-weight:800;text-transform:capitalize">${label}</td></tr>`;
  }).join("")+"</tbody>";
 
  const next=data.calendar.find(c=>c[2]==="Prossima")||data.calendar.find(c=>c[2]==="In attesa");
