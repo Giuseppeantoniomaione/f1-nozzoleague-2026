@@ -159,14 +159,14 @@ tbody tr:hover td{background:#151819}
 .home-screen.hidden{opacity:0;visibility:hidden;pointer-events:none}
 .home-bg-blur{
   position:absolute;inset:-30px;
-  background-image:linear-gradient(rgba(0,0,0,.28),rgba(0,0,0,.48)),url("assets/homepage-2027.png");
+  background-image:linear-gradient(rgba(0,0,0,.28),rgba(0,0,0,.48)),url("assets/homepage-nozzoleague-2027-originale-v3.png");
   background-size:cover;background-position:center;
   filter:blur(18px) brightness(.55);
   transform:scale(1.08);
 }
 .home-poster{
   position:absolute;inset:0;
-  background-image:url("assets/homepage-2027.png");
+  background-image:url("assets/homepage-nozzoleague-2027-originale-v3.png");
   background-size:contain;background-repeat:no-repeat;background-position:center;
 }
 .home-overlay{
@@ -502,29 +502,32 @@ body.nl-navigation:not(.nl-page-open)::before{background:linear-gradient(180deg,
 
 <style id="nozzo-2027-home-update">
 .home-screen{background:#080c17!important;overflow:hidden!important}
-.home-bg-blur{display:none!important}
-.home-overlay{display:none!important}
+.home-bg-blur,.home-overlay{display:none!important}
 .home-poster{
  position:absolute!important;inset:auto!important;left:50%!important;top:50%!important;
  transform:translate(-50%,-50%)!important;
  width:min(100vw,56.28dvh)!important;height:auto!important;aspect-ratio:941/1672!important;
- background:url("assets/homepage-2027.png") center center/100% 100% no-repeat!important;
+ background-image:url("assets/homepage-nozzoleague-2027-originale-v3.png")!important;
+ background-position:center!important;background-size:100% 100%!important;background-repeat:no-repeat!important;
  background-color:#080c17!important;z-index:2!important;
 }
-.enter-league,.enter-league:hover,.enter-league:active{
- position:absolute!important;top:85.4%!important;left:50%!important;bottom:auto!important;
+/* One real button only: the uploaded original poster has no baked-in button. */
+.home-poster .enter-league,
+.home-poster .enter-league:hover,
+.home-poster .enter-league:active{
+ position:absolute!important;top:85.4%!important;bottom:auto!important;left:50%!important;
  transform:translateX(-50%)!important;width:76%!important;height:5.4%!important;
  min-width:0!important;display:flex!important;align-items:center!important;justify-content:center!important;
- padding:0 8px!important;background:rgba(10,14,25,.66)!important;
- border:1px solid rgba(230,48,55,.75)!important;border-radius:13px!important;
- box-shadow:0 0 12px rgba(170,16,25,.20),inset 0 1px rgba(255,255,255,.10)!important;
+ padding:0 8px!important;background:rgba(9,12,22,.72)!important;
+ border:1px solid rgba(216,46,55,.75)!important;border-radius:13px!important;
+ box-shadow:0 0 10px rgba(170,16,25,.14),inset 0 1px rgba(255,255,255,.10)!important;
  color:#fff!important;font-size:clamp(12px,3.8vw,19px)!important;font-weight:900!important;
  letter-spacing:.055em!important;font-style:italic!important;text-shadow:0 1px 3px #000!important;
- cursor:pointer!important;backdrop-filter:blur(9px)!important;-webkit-backdrop-filter:blur(9px)!important;
- -webkit-tap-highlight-color:transparent!important
+ cursor:pointer!important;backdrop-filter:blur(8px)!important;-webkit-backdrop-filter:blur(8px)!important;
+ -webkit-tap-highlight-color:transparent!important;
 }
-.enter-league:hover{background:rgba(48,13,22,.78)!important}
-.enter-league:focus-visible{outline:2px solid white!important;outline-offset:2px}
+.home-poster .enter-league:hover{background:rgba(38,13,22,.80)!important}
+.home-poster .enter-league:focus-visible{outline:2px solid white!important;outline-offset:2px}
 </style></head>
 <body>
 
