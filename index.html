@@ -159,14 +159,14 @@ tbody tr:hover td{background:#151819}
 .home-screen.hidden{opacity:0;visibility:hidden;pointer-events:none}
 .home-bg-blur{
   position:absolute;inset:-30px;
-  background-image:linear-gradient(rgba(0,0,0,.28),rgba(0,0,0,.48)),url("assets/homepage-nozzoleague-2027-originale-v3.png");
+  background-image:linear-gradient(rgba(0,0,0,.28),rgba(0,0,0,.48)),url("assets/homepage-nozzoleague-2027-foto3-v5.png");
   background-size:cover;background-position:center;
   filter:blur(18px) brightness(.55);
   transform:scale(1.08);
 }
 .home-poster{
   position:absolute;inset:0;
-  background-image:url("assets/homepage-nozzoleague-2027-originale-v3.png");
+  background-image:url("assets/homepage-nozzoleague-2027-foto3-v5.png");
   background-size:contain;background-repeat:no-repeat;background-position:center;
 }
 .home-overlay{
@@ -520,7 +520,16 @@ body.nl-navigation:not(.nl-page-open)::before{background:linear-gradient(180deg,
  -webkit-tap-highlight-color:transparent!important}
 .home-poster .enter-league:hover{background:rgba(38,13,22,.84)!important}
 .home-poster .enter-league:focus-visible{outline:2px solid white!important;outline-offset:2px}
-</style></head>
+</style><script id="nozzo-no-serviceworker">
+// Disable obsolete offline worker without deleting league results stored locally.
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.getRegistrations().then(function (regs) {
+      regs.forEach(function (reg) { reg.unregister(); });
+    }).catch(function () {});
+  });
+}
+</script></head>
 <body>
 
 <div class="home-screen" id="homeScreen">
@@ -1707,15 +1716,7 @@ render();
 </div>
 
 
-<script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./service-worker.js").catch(error => {
-      console.warn("Service worker non registrato:", error);
-    });
-  });
-}
-</script>
+
 
 
 <div class="driver-modal" id="driverProfileModal" aria-hidden="true">
