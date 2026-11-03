@@ -515,6 +515,19 @@ body.nl-navigation:not(.nl-page-open) .nl-menu{padding:calc(env(safe-area-inset-
 .nl-menu-footer{margin-top:26px}
 @media(max-width:390px){.nl-brand-name{font-size:7.8vw}.nl-menu-grid .nl-tile{min-height:155px!important}.nl-menu-grid .nl-tile .nl-tile-icon{font-size:33px!important}.nl-section-heading:before,.nl-section-heading:after{margin:0 7px}}
 @media(min-width:700px){body.nl-navigation:not(.nl-page-open) .nl-menu{padding-top:calc(env(safe-area-inset-top,0px) + 82px)!important}.nl-menu-grid .nl-tile{min-height:205px!important}}
+
+/* Menu definitivo approvato: tipografia, icone e logo F1® */
+.nl-f1mark{width:clamp(125px,33vw,210px)!important;max-height:65px!important;object-fit:contain!important;margin-bottom:10px!important}
+.nl-brand-name{font-family:Impact,'Arial Narrow',Arial,sans-serif!important;font-weight:900!important;font-style:italic!important;letter-spacing:-.4px!important;transform:skew(-7deg) scaleX(1.04);font-size:clamp(30px,8.5vw,60px)!important}
+.nl-brand-year{font-family:Impact,'Arial Narrow',Arial,sans-serif!important;font-weight:900!important;letter-spacing:2px!important}
+.nl-section-heading span{font-family:Impact,'Arial Narrow',Arial,sans-serif!important;font-weight:900!important;letter-spacing:.3px!important}
+.nl-menu-grid .nl-tile .nl-tile-icon{width:clamp(61px,19vw,94px)!important;height:clamp(61px,19vw,94px)!important;display:flex!important;align-items:center!important;justify-content:center!important;margin:0 auto 10px!important;filter:none!important}
+.nl-menu-grid .nl-tile .nl-tile-icon img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 5px #ed183355)}
+.nl-menu-grid .nl-tile .nl-tile-arrow{display:none!important}
+.nl-menu-grid .nl-tile .nl-tile-label{font-family:Impact,'Arial Narrow',Arial,sans-serif!important;font-style:italic!important;font-weight:900!important;font-size:clamp(15px,4vw,24px)!important;line-height:1.08!important;letter-spacing:0!important;transform:skew(-5deg);white-space:normal;overflow-wrap:normal}
+.nl-menu-grid .nl-tile{min-height:clamp(172px,45vw,230px)!important;padding:14px 5px!important}
+body.nl-navigation:not(.nl-page-open) .nl-menu{padding-top:calc(env(safe-area-inset-top,0px) + 84px)!important}
+@media(max-width:390px){.nl-menu-grid .nl-tile .nl-tile-label{font-size:clamp(14px,3.9vw,17px)!important}.nl-menu-grid .nl-tile{min-height:168px!important}.nl-menu-grid{gap:10px!important}.nl-brand-name{font-size:8vw!important}}
 </style>
 
 <link rel="manifest" href="manifest.json">
@@ -635,13 +648,13 @@ if ('serviceWorker' in navigator) {
 
 <nav id="nlMenu" class="nl-menu" aria-label="Menu NozzoLeague">
  <div class="nl-brand2027" aria-label="F1 NozzoLeague 2027">
-   <svg class="nl-f1mark" viewBox="0 0 210 68" role="img" aria-label="F1" xmlns="http://www.w3.org/2000/svg"><path fill="#f20d25" d="M0 15H121L108 29H0ZM0 36H101L88 50H0ZM132 15H210L158 68H112L151 29H119Z"/><path fill="#f20d25" d="M0 57H80L69 68H0Z"/></svg>
+   <img class="nl-f1mark" src="assets/menu/f1-logo-r.png" alt="Formula 1®">
    <div class="nl-brand-name">NOZZOLEAGUE</div>
    <div class="nl-brand-year"><span>2027</span></div>
  </div>
  <div class="nl-section-heading"><span>ESPLORA IL PADDOCK</span></div>
  <div class="nl-menu-grid">
- <button class="nl-tile" onclick="nlShow('drivers')"><span class="nl-tile-icon">♜</span><span class="nl-tile-label">CLASSIFICA<br>PILOTI</span><span class="nl-tile-arrow">➜</span></button>
+ <button class="nl-tile" onclick="nlShow('drivers')"><span class="nl-tile-icon"><img src="assets/menu/piloti.png" alt="" loading="eager"></span><span class="nl-tile-label">CLASSIFICA<br>PILOTI</span><span class="nl-tile-arrow">➜</span></button>
  <button class="nl-tile" onclick="nlShow('teams')"><span class="nl-tile-icon">🏎</span><span class="nl-tile-label">CLASSIFICA<br>COSTRUTTORI</span><span class="nl-tile-arrow">➜</span></button>
  <button class="nl-tile" onclick="nlShow('calendar')"><span class="nl-tile-icon">▦</span><span class="nl-tile-label">CALENDARIO<br>2027</span><span class="nl-tile-arrow">➜</span></button>
  <button class="nl-tile" onclick="nlShow('last')"><span class="nl-tile-icon">⚑</span><span class="nl-tile-label">ULTIMA<br>GARA</span><span class="nl-tile-arrow">➜</span></button>
