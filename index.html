@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="it"><head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>F1 NozzoLeague 2027 — Circuiti reali</title>
 <style>
 :root{
@@ -501,25 +501,14 @@ body.nl-navigation:not(.nl-page-open)::before{background:linear-gradient(180deg,
 <meta name="mobile-web-app-capable" content="yes">
 
 <style id="nozzo-2027-home-update">
-.home-screen{background:#080e1a!important;overflow:hidden!important}
+/* Fotografia originale, senza allungamenti, bande o alterazioni dei volti. */
+html,body{margin:0!important;min-height:100%!important;background:#08101e!important}
+.home-screen{position:fixed!important;inset:0!important;width:100%!important;height:100%!important;height:100dvh!important;overflow:hidden!important;background:#08101e!important}
 .home-bg-blur,.home-overlay{display:none!important}
-.home-poster{position:absolute!important;inset:auto!important;left:50%!important;top:50%!important;
- transform:translate(-50%,-50%)!important;width:min(100vw,53.11dvh)!important;height:auto!important;
- aspect-ratio:914/1721!important;background:url("assets/homepage-nozzoleague-2027-foto3-v5.png") center/100% 100% no-repeat!important;
- background-color:#080e1a!important;z-index:2!important}
-.home-poster .enter-league,.home-poster .enter-league:hover,.home-poster .enter-league:active{
- position:absolute!important;top:84.1%!important;left:50%!important;bottom:auto!important;
- transform:translateX(-50%)!important;width:78%!important;height:3.0%!important;
- min-width:0!important;display:flex!important;align-items:center!important;justify-content:center!important;
- padding:0 6px!important;background:rgba(12,13,24,.73)!important;
- border:2px solid #ff3a45!important;border-radius:24px!important;
- box-shadow:0 0 13px rgba(255,24,41,.58),inset 0 1px rgba(255,255,255,.16)!important;
- color:white!important;font-size:clamp(11px,3.4vw,18px)!important;font-weight:900!important;
- letter-spacing:.03em!important;font-style:italic!important;text-shadow:0 1px 3px black!important;
- cursor:pointer!important;backdrop-filter:blur(7px)!important;-webkit-backdrop-filter:blur(7px)!important;
- -webkit-tap-highlight-color:transparent!important}
-.home-poster .enter-league:hover{background:rgba(38,13,22,.84)!important}
-.home-poster .enter-league:focus-visible{outline:2px solid white!important;outline-offset:2px}
+.home-poster{position:absolute!important;inset:0!important;left:0!important;top:0!important;transform:none!important;width:100%!important;height:100%!important;aspect-ratio:auto!important;background-image:url("assets/homepage-nozzoleague-2027-foto3-v5.png")!important;background-size:cover!important;background-position:center center!important;background-repeat:no-repeat!important;z-index:2!important}
+/* Il tasto resta indipendente dall'immagine e non altera il disegno. */
+.home-poster .enter-league,.home-poster .enter-league:hover,.home-poster .enter-league:active{position:absolute!important;left:50%!important;top:78.1%!important;bottom:auto!important;transform:translateX(-50%)!important;width:78%!important;height:3.5%!important;min-height:30px!important;max-height:49px!important;min-width:0!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:0 8px!important;background:rgba(8,11,22,.76)!important;border:2px solid #ff344a!important;border-radius:40px!important;box-shadow:0 0 15px rgba(240,22,43,.55),inset 0 0 12px rgba(255,40,65,.1)!important;color:#fff!important;font-size:clamp(12px,3.7vw,20px)!important;font-weight:900!important;font-style:italic!important;letter-spacing:.035em!important;white-space:nowrap!important;text-shadow:0 1px 3px #000!important;cursor:pointer!important;-webkit-tap-highlight-color:transparent!important}
+.home-poster .enter-league:focus-visible{outline:2px solid white!important;outline-offset:3px!important}
 </style><script id="nozzo-no-serviceworker">
 // Disable obsolete offline worker without deleting league results stored locally.
 if ('serviceWorker' in navigator) {
