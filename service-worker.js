@@ -1,5 +1,5 @@
 /* NozzoLeague 2027: online-first. Non memorizza né modifica i risultati. */
-const VERSION = '20261104-pwa-network-first-v3';
+const VERSION = '20261104-pwa-network-first-v5-home-icon';
 const CACHE = 'nozzoleague-static-' + VERSION;
 const CORE = ['./', './index.html', './manifest.json'];
 self.addEventListener('install', event => {
