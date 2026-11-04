@@ -575,16 +575,16 @@ body.nl-navigation.nl-page-open .header .gear{flex:0 0 auto;width:45px;height:45
 ::view-transition-old(root),::view-transition-new(root){animation:none!important}
 ::view-transition-old(nl-content),::view-transition-new(nl-content){
   animation-duration:270ms;animation-timing-function:cubic-bezier(.22,.61,.36,1);
-  animation-fill-mode:both;mix-blend-mode:normal;
+  animation-fill-mode:both;mix-blend-mode:normal;opacity:1;
 }
 html.nl-moving-forward::view-transition-old(nl-content){animation-name:nlOldForward}
 html.nl-moving-forward::view-transition-new(nl-content){animation-name:nlNewForward}
 html.nl-moving-back::view-transition-old(nl-content){animation-name:nlOldBack}
 html.nl-moving-back::view-transition-new(nl-content){animation-name:nlNewBack}
-@keyframes nlOldForward{to{transform:translate3d(-24%,0,0);opacity:.55}}
+@keyframes nlOldForward{from{transform:translate3d(0,0,0);opacity:1}to{transform:translate3d(-101%,0,0);opacity:1}}
 @keyframes nlNewForward{from{transform:translate3d(100%,0,0);opacity:1}to{transform:translate3d(0,0,0);opacity:1}}
 @keyframes nlOldBack{from{transform:translate3d(0,0,0)}to{transform:translate3d(100%,0,0)}}
-@keyframes nlNewBack{from{transform:translate3d(-12%,0,0)}to{transform:translate3d(0,0,0)}}
+@keyframes nlNewBack{from{transform:translate3d(-101%,0,0);opacity:1}to{transform:translate3d(0,0,0);opacity:1}}
 @media(prefers-reduced-motion:reduce){.app{view-transition-name:none}}
 </style>
 
@@ -774,7 +774,7 @@ if ('serviceWorker' in navigator) {
     }).catch(function () {});
   });
 }
-</script><meta name="nozzoleague-build" content="20261104-edge-slide-4">
+</script><meta name="nozzoleague-build" content="20261104-menu-full-edge-slide-5">
 <script id="nozzo-fresh-launch">
 /* Controlla la versione online senza cancellare risultati o impostazioni locali. */
 (function () {
