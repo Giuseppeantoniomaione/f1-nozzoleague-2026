@@ -570,33 +570,17 @@ body.nl-navigation.nl-page-open .header .gear{flex:0 0 auto;width:45px;height:45
 #homeScreen{transition:transform 300ms cubic-bezier(.22,.61,.36,1)!important;will-change:transform;transform:translate3d(0,0,0);opacity:1!important;visibility:visible!important;backface-visibility:hidden;}
 #homeScreen.hidden{transform:translate3d(-101%,0,0)!important;opacity:1!important;visibility:visible!important;pointer-events:none!important;}
 @media(prefers-reduced-motion:reduce){#homeScreen{transition:none!important}}
-/* Navigazione a due schermate simultanee: movimento completo oltre i bordi. */
+/* Navigazione a due schermate simultanee: movimento continuo dai bordi. */
 .app.nl-slide-in-left,.app.nl-slide-in-right{will-change:transform;backface-visibility:hidden;-webkit-backface-visibility:hidden}
 .app.nl-slide-in-left{animation:nlEnterLeft 430ms cubic-bezier(.35,0,.2,1) both!important;pointer-events:none}
 .app.nl-slide-in-right{animation:nlEnterRight 430ms cubic-bezier(.35,0,.2,1) both!important;pointer-events:none}
 .nl-transition-old{position:fixed!important;left:0!important;right:0!important;z-index:9000!important;pointer-events:none!important;will-change:transform;backface-visibility:hidden;-webkit-backface-visibility:hidden;contain:layout style paint}
 .nl-transition-old.nl-old-left{animation:nlExitLeft 430ms cubic-bezier(.35,0,.2,1) both!important}
 .nl-transition-old.nl-old-right{animation:nlExitRight 430ms cubic-bezier(.35,0,.2,1) both!important}
-@keyframes nlExitLeft{from{transform:translate3d(0,0,0)}to{transform:translate3d(calc(-1 * var(--nl-travel-left, 110vw)),0,0)}}
-@keyframes nlExitRight{from{transform:translate3d(0,0,0)}to{transform:translate3d(var(--nl-travel-right, 110vw),0,0)}}
-@keyframes nlEnterLeft{from{transform:translate3d(calc(-1 * var(--nl-travel-left, 110vw)),0,0)}to{transform:translate3d(0,0,0)}}
-@keyframes nlEnterRight{from{transform:translate3d(var(--nl-travel-right, 110vw),0,0)}to{transform:translate3d(0,0,0)}}
-/* La copia uscente mantiene la sua impaginazione anche dopo il cambio pagina. */
-.nl-transition-old.nl-clone-menu #nlMenu{display:block!important}
-.nl-transition-old.nl-clone-menu main{display:none!important}
-.nl-transition-old.nl-clone-menu .header{position:absolute!important;top:calc(env(safe-area-inset-top,0px) + 12px)!important;right:16px!important;width:52px!important;min-height:0!important;height:46px!important;margin:0!important;padding:0!important;display:block!important;border:0!important;z-index:8!important}
-.nl-transition-old.nl-clone-menu .header .brand,.nl-transition-old.nl-clone-menu .header .next{display:none!important}
-.nl-transition-old.nl-clone-menu .header .gear{display:block!important;width:44px!important;height:44px!important}
-.nl-transition-old.nl-clone-menu .nl-menu{padding:calc(env(safe-area-inset-top,0px) + 84px) 8px 34px!important;max-width:680px!important;margin:0 auto!important;min-height:100dvh!important}
-.nl-transition-old.nl-clone-page #nlMenu{display:none!important}
-.nl-transition-old.nl-clone-page main{display:block!important}
-.nl-transition-old.nl-clone-page #nlGrid{display:block!important}
-.nl-transition-old.nl-clone-page #nlGrid>article{display:none!important}
-.nl-transition-old.nl-clone-page #nlGrid>article.nl-active{display:block!important}
-.nl-transition-old.nl-clone-page .last-race{display:none!important}
-.nl-transition-old.nl-clone-page .last-race.nl-active{display:block!important}
-.nl-transition-old.nl-clone-page{padding-top:calc(env(safe-area-inset-top,0px) + 22px)!important}
-.nl-transition-old.nl-clone-page .header{display:flex!important;align-items:center!important;justify-content:space-between!important;min-height:64px!important;margin-bottom:12px!important;padding-bottom:10px!important}
+@keyframes nlExitLeft{from{transform:translate3d(0,0,0)}to{transform:translate3d(-100vw,0,0)}}
+@keyframes nlExitRight{from{transform:translate3d(0,0,0)}to{transform:translate3d(100vw,0,0)}}
+@keyframes nlEnterLeft{from{transform:translate3d(-100vw,0,0)}to{transform:translate3d(0,0,0)}}
+@keyframes nlEnterRight{from{transform:translate3d(100vw,0,0)}to{transform:translate3d(0,0,0)}}
 @media(prefers-reduced-motion:reduce){.app.nl-slide-in-left,.app.nl-slide-in-right,.nl-transition-old{animation:none!important}}
 </style>
 
@@ -2097,12 +2081,8 @@ function nlShow(page){
  const rect=app.getBoundingClientRect();
  old.removeAttribute('id');
  old.setAttribute('aria-hidden','true');
- old.classList.add('nl-transition-old',back?'nl-old-right':'nl-old-left',nlCurrentPage==='menu'?'nl-clone-menu':'nl-clone-page');
+ old.classList.add('nl-transition-old',back?'nl-old-right':'nl-old-left');
  old.style.top=rect.top+'px';
- // La corsa include anche lo spazio tra la pagina e il bordo del display.
- const travelLeft=Math.ceil(rect.right+8)+'px';
- const travelRight=Math.ceil(window.innerWidth-rect.left+8)+'px';
- for(const node of [old,app]){node.style.setProperty('--nl-travel-left',travelLeft);node.style.setProperty('--nl-travel-right',travelRight);}
  old.style.width=rect.width+'px';
  old.style.height=app.offsetHeight+'px';
  old.style.margin='0';
@@ -2115,7 +2095,6 @@ function nlShow(page){
  function finish(){
    if(finished)return;finished=true;
    app.classList.remove(enterClass);
-   app.style.removeProperty('--nl-travel-left');app.style.removeProperty('--nl-travel-right');
    old.remove();
    nlTransitioning=false;
  }
