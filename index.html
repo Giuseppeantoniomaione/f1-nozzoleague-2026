@@ -722,6 +722,15 @@ body.nl-navigation .home-screen{z-index:9999!important}
   body.nl-navigation::before{display:block!important;position:fixed!important;z-index:0!important}
   body.nl-navigation::after{display:none!important}
 }
+/* Tunnel 2027: livello reale fisso, non pseudo-elemento del body.
+   Visibile nel menu e nelle sezioni; schermata fotografica esclusa. */
+#nl-fixed-tunnel{display:none;position:fixed;inset:0;width:100%;height:100vh;height:100dvh;pointer-events:none;z-index:0;background:linear-gradient(180deg,rgba(0,0,0,.24),rgba(0,0,0,.42)),url("assets/tunnel-2027-hd.webp") center center/cover no-repeat}
+html body.nl-navigation{isolation:auto!important;background:#050506!important;background-image:none!important}
+body.nl-navigation #nl-fixed-tunnel{display:block!important}
+body.nl-navigation::before,body.nl-navigation::after{content:none!important;display:none!important}
+body.nl-navigation .app{position:relative!important;z-index:1!important;background:transparent!important}
+body.nl-navigation:not(.nl-page-open) .nl-menu{background:transparent!important}
+body.nl-navigation .home-screen{z-index:9999!important}
 </style><script id="nozzo-no-serviceworker">
 // Disable obsolete offline worker without deleting league results stored locally.
 if ('serviceWorker' in navigator) {
@@ -733,6 +742,7 @@ if ('serviceWorker' in navigator) {
 }
 </script></head>
 <body>
+<div id="nl-fixed-tunnel" aria-hidden="true"></div>
 
 <div class="home-screen" id="homeScreen">
   <div class="home-bg-blur"></div>
