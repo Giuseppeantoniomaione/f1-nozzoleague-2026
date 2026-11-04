@@ -567,7 +567,7 @@ body.nl-navigation.nl-page-open .header .gear{flex:0 0 auto;width:45px;height:45
 @media(max-width:355px){.nl-inner-f1{width:50px}.nl-inner-name{font-size:14px}.nl-inner-year{font-size:17px}}
 
 /* Dissolvenza navigazione: il tunnel fisso non viene animato. */
-#nlPageFade{position:fixed;inset:0;z-index:9990;background:#050506;opacity:0;pointer-events:none;transition:opacity 190ms ease-in-out;}
+#nlPageFade{position:fixed;inset:0;z-index:9990;background:#050506;opacity:0;pointer-events:none;transition:opacity 85ms ease-in-out;}
 #nlPageFade.nl-fade-visible{opacity:1;}
 @media(prefers-reduced-motion:reduce){#nlPageFade{transition:none;}}
 </style>
@@ -758,7 +758,39 @@ if ('serviceWorker' in navigator) {
     }).catch(function () {});
   });
 }
-</script></head>
+</script><meta name="nozzoleague-build" content="20261104-cache-refresh-1">
+<script id="nozzo-fresh-launch">
+/* Controlla la versione online senza cancellare risultati o impostazioni locali. */
+(function () {
+  const build = document.querySelector('meta[name="nozzoleague-build"]').content;
+  let checking = false;
+  let lastCheck = 0;
+  async function checkLatest() {
+    if (checking || !navigator.onLine || Date.now() - lastCheck < 12000) return;
+    checking = true;
+    lastCheck = Date.now();
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set('_nl_check', String(Date.now()));
+      const response = await fetch(url.href, {cache:'no-store', credentials:'same-origin'});
+      if (!response.ok) return;
+      const html = await response.text();
+      const match = html.match(/<meta\s+name=["']nozzoleague-build["']\s+content=["']([^"']+)["']/i);
+      if (!match || match[1] === build) return;
+      const target = new URL(window.location.href);
+      target.searchParams.delete('_nl_check');
+      target.searchParams.set('nl_version', match[1]);
+      if (target.href !== window.location.href) window.location.replace(target.href);
+    } catch (err) { /* Offline: usa normalmente la versione disponibile. */ }
+    finally { checking = false; }
+  }
+  window.addEventListener('pageshow', checkLatest);
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'visible') checkLatest();
+  });
+})();
+</script>
+</head>
 <body>
 <div id="nl-fixed-tunnel" aria-hidden="true"></div>
 <div id="nlPageFade" aria-hidden="true"></div>
@@ -2015,8 +2047,8 @@ function nlShow(page){
  setTimeout(()=>{
    nlApplyPage(target);
    requestAnimationFrame(()=>requestAnimationFrame(()=>veil.classList.remove('nl-fade-visible')));
-   setTimeout(()=>{nlTransitioning=false;},250);
- },190);
+   setTimeout(()=>{nlTransitioning=false;},105);
+ },85);
 }
 function nlInit(){nlApplyPage('menu')}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',nlInit);else nlInit();
