@@ -544,6 +544,27 @@ body.nl-navigation:not(.nl-page-open) .nl-menu{padding-top:calc(env(safe-area-in
 .nl-next-banner:hover,.nl-next-banner:focus-visible{box-shadow:0 0 21px #ffffff55,inset 0 0 18px #ffffff15}
 body.nl-page-open .nl-next-banner{display:none!important}
 @media(max-width:390px){.nl-next-banner{grid-template-columns:minmax(0,1fr) 30% 29px;gap:5px;padding:12px 8px 12px 11px;min-height:128px}.nl-next-go{width:28px;height:42px}.nl-next-tag{font-size:12px}.nl-next-copy strong{font-size:19px}.nl-next-track img{height:90px}}
+
+/* Intestazione sezioni interne 2027 — identità coerente e spazio Dynamic Island */
+body.nl-navigation.nl-page-open .app{padding-top:calc(env(safe-area-inset-top, 0px) + 68px)!important}
+body.nl-navigation.nl-page-open .header{display:flex!important;align-items:center;justify-content:space-between;gap:12px;min-height:76px;margin-bottom:16px;padding:0 0 13px;border-bottom:1px solid #e51b32a8}
+body.nl-navigation.nl-page-open .header .brand{min-width:0;flex:1}
+body.nl-navigation.nl-page-open .header .brand-lockup{display:flex;align-items:center;gap:13px;min-width:0}
+.nl-inner-f1{display:block;width:clamp(65px,15vw,110px);height:52px;object-fit:contain;flex-shrink:0}
+.nl-inner-wordmark{min-width:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px}
+.nl-inner-name{color:#fff;font:italic 1000 clamp(18px,3.1vw,33px)/1 'Arial Black',Arial,sans-serif;letter-spacing:-.8px;transform:skew(-7deg);white-space:nowrap}
+.nl-inner-year{color:#f01833;font:italic 1000 clamp(19px,3vw,29px)/1 'Arial Black',Arial,sans-serif;transform:skew(-7deg)}
+body.nl-navigation.nl-page-open .header .gear{flex:0 0 auto;width:45px;height:45px;font-size:24px}
+@media(max-width:600px){
+ body.nl-navigation.nl-page-open .app{padding-top:calc(env(safe-area-inset-top, 0px) + 76px)!important}
+ body.nl-navigation.nl-page-open .header{min-height:64px;gap:8px;margin-bottom:12px;padding-bottom:10px}
+ body.nl-navigation.nl-page-open .header .brand-lockup{gap:9px}
+ .nl-inner-f1{width:clamp(56px,16vw,74px);height:40px}
+ .nl-inner-name{font-size:clamp(15px,4.2vw,21px);letter-spacing:-.7px}
+ .nl-inner-year{font-size:clamp(17px,4.8vw,23px)}
+ body.nl-navigation.nl-page-open .header .gear{width:38px;height:38px;font-size:21px}
+}
+@media(max-width:355px){.nl-inner-f1{width:50px}.nl-inner-name{font-size:14px}.nl-inner-year{font-size:17px}}
 </style>
 
 <link rel="manifest" href="manifest.json?v=2027icon2">
@@ -651,10 +672,10 @@ if ('serviceWorker' in navigator) {
   <header class="header">
     <div class="brand">
       <div class="brand-lockup readable-brand">
-        <div class="f1-readable">F1</div>
-        <div class="brand-copy">
-          <div class="name">NOZZO<span>LEAGUE</span></div>
-          <div class="year">2027</div>
+        <img class="nl-inner-f1" src="assets/menu/f1-logo-r.png" alt="F1®">
+        <div class="nl-inner-wordmark" aria-label="NozzoLeague 2027">
+          <div class="nl-inner-name">NOZZOLEAGUE</div>
+          <div class="nl-inner-year">2027</div>
         </div>
       </div>
     </div>
