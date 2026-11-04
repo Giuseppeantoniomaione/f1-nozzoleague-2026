@@ -570,22 +570,16 @@ body.nl-navigation.nl-page-open .header .gear{flex:0 0 auto;width:45px;height:45
 #homeScreen{transition:transform 300ms cubic-bezier(.22,.61,.36,1)!important;will-change:transform;transform:translate3d(0,0,0);opacity:1!important;visibility:visible!important;backface-visibility:hidden;}
 #homeScreen.hidden{transform:translate3d(-101%,0,0)!important;opacity:1!important;visibility:visible!important;pointer-events:none!important;}
 @media(prefers-reduced-motion:reduce){#homeScreen{transition:none!important}}
-/* Navigazione fluida: snapshot simultanei delle schermate, tunnel fisso. */
-.app{view-transition-name:nl-content}
-::view-transition-old(root),::view-transition-new(root){animation:none!important}
-::view-transition-old(nl-content),::view-transition-new(nl-content){
-  animation-duration:270ms;animation-timing-function:cubic-bezier(.22,.61,.36,1);
-  animation-fill-mode:both;mix-blend-mode:normal;opacity:1;
-}
-html.nl-moving-forward::view-transition-old(nl-content){animation-name:nlOldForward}
-html.nl-moving-forward::view-transition-new(nl-content){animation-name:nlNewForward}
-html.nl-moving-back::view-transition-old(nl-content){animation-name:nlOldBack}
-html.nl-moving-back::view-transition-new(nl-content){animation-name:nlNewBack}
-@keyframes nlOldForward{from{transform:translate3d(0,0,0);opacity:1}to{transform:translate3d(-101%,0,0);opacity:1}}
-@keyframes nlNewForward{from{transform:translate3d(100%,0,0);opacity:1}to{transform:translate3d(0,0,0);opacity:1}}
-@keyframes nlOldBack{from{transform:translate3d(0,0,0)}to{transform:translate3d(100%,0,0)}}
-@keyframes nlNewBack{from{transform:translate3d(-101%,0,0);opacity:1}to{transform:translate3d(0,0,0);opacity:1}}
-@media(prefers-reduced-motion:reduce){.app{view-transition-name:none}}
+/* Navigazione universale: CSS transform, senza View Transitions API. */
+.app.nl-slide-out-left{animation:nlExitLeft 155ms cubic-bezier(.4,0,.8,.5) both!important;pointer-events:none}
+.app.nl-slide-out-right{animation:nlExitRight 155ms cubic-bezier(.4,0,.8,.5) both!important;pointer-events:none}
+.app.nl-slide-in-left{animation:nlEnterLeft 155ms cubic-bezier(.2,.5,.3,1) both!important;pointer-events:none}
+.app.nl-slide-in-right{animation:nlEnterRight 155ms cubic-bezier(.2,.5,.3,1) both!important;pointer-events:none}
+@keyframes nlExitLeft{from{transform:translate3d(0,0,0)}to{transform:translate3d(-105vw,0,0)}}
+@keyframes nlExitRight{from{transform:translate3d(0,0,0)}to{transform:translate3d(105vw,0,0)}}
+@keyframes nlEnterLeft{from{transform:translate3d(-105vw,0,0)}to{transform:translate3d(0,0,0)}}
+@keyframes nlEnterRight{from{transform:translate3d(105vw,0,0)}to{transform:translate3d(0,0,0)}}
+@media(prefers-reduced-motion:reduce){.app.nl-slide-out-left,.app.nl-slide-out-right,.app.nl-slide-in-left,.app.nl-slide-in-right{animation:none!important}}
 </style>
 
 <link rel="manifest" href="manifest.json?v=20261104-approved-home">
@@ -765,7 +759,7 @@ body.nl-navigation::before,body.nl-navigation::after{content:none!important;disp
 body.nl-navigation .app{position:relative!important;z-index:1!important;background:transparent!important}
 body.nl-navigation:not(.nl-page-open) .nl-menu{background:transparent!important}
 body.nl-navigation .home-screen{z-index:9999!important}
-</style><meta name="nozzoleague-build" content="20261104-pwa-network-first-v3">
+</style><meta name="nozzoleague-build" content="20261104-universal-slides-v4">
 <script id="nozzo-fresh-launch">
 /* Aggiornamento web app: controlla l'HTML online, senza toccare localStorage. */
 (function () {
@@ -2074,15 +2068,28 @@ function nlApplyPage(page){
 function nlShow(page){
  const target=['drivers','teams','calendar','last'].includes(page)?page:'menu';
  if(nlTransitioning || (target===nlCurrentPage && document.body.classList.contains('nl-navigation')))return;
- if(window.matchMedia('(prefers-reduced-motion: reduce)').matches || !document.startViewTransition){nlApplyPage(target);return;}
+ const app=document.querySelector('.app');
+ if(!app || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)){
+   nlApplyPage(target);return;
+ }
  nlTransitioning=true;
- const direction=target==='menu'?'back':'forward';
- document.documentElement.classList.add('nl-moving-'+direction);
- const transition=document.startViewTransition(()=>nlApplyPage(target));
- transition.finished.catch(()=>{}).finally(()=>{
-   document.documentElement.classList.remove('nl-moving-'+direction);
-   nlTransitioning=false;
- });
+ const back=target==='menu';
+ const exitClass=back?'nl-slide-out-right':'nl-slide-out-left';
+ const enterClass=back?'nl-slide-in-left':'nl-slide-in-right';
+ app.classList.add(exitClass);
+ let done=false;
+ function swap(){
+   if(done)return;done=true;
+   app.classList.remove(exitClass);
+   nlApplyPage(target);
+   app.classList.add(enterClass);
+   let finished=false;
+   function finish(){if(finished)return;finished=true;app.classList.remove(enterClass);nlTransitioning=false;}
+   app.addEventListener('animationend',function onEnter(e){if(e.target!==app)return;app.removeEventListener('animationend',onEnter);finish();},{once:true});
+   setTimeout(finish,210);
+ }
+ app.addEventListener('animationend',function onExit(e){if(e.target!==app)return;app.removeEventListener('animationend',onExit);swap();},{once:true});
+ setTimeout(swap,210);
 }
 function nlInit(){nlApplyPage('menu')}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',nlInit);else nlInit();
