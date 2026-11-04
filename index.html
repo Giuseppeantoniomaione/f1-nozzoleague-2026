@@ -659,14 +659,6 @@ if ('serviceWorker' in navigator) {
       </div>
     </div>
 
-    <div class="next">
-      <div>
-        <small>PROSSIMO GP</small>
-        <strong id="nextName">CINA</strong>
-        <b id="nextRound">ROUND 2</b>
-      </div>
-    </div>
-
     <button class="gear" onclick="openEditor()" title="Modifica">⚙</button>
   </header>
 
@@ -1256,8 +1248,6 @@ function render(){
  }).join("")+"</tbody>";
 
  const next=data.calendar.find(c=>c[2]==="Prossima")||data.calendar.find(c=>c[2]==="In attesa");
- nextName.textContent=next?next[1].toUpperCase():"CONCLUSO";
- nextRound.textContent=next?`ROUND ${next[0]}`:"";
  nlUpdateNextBanner();
 
  lastGp.textContent=data.race.name.toUpperCase();
