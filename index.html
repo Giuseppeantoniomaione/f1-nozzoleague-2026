@@ -528,6 +528,22 @@ body.nl-navigation:not(.nl-page-open) .nl-menu{padding:calc(env(safe-area-inset-
 .nl-menu-grid .nl-tile{min-height:clamp(172px,45vw,230px)!important;padding:14px 5px!important}
 body.nl-navigation:not(.nl-page-open) .nl-menu{padding-top:calc(env(safe-area-inset-top,0px) + 84px)!important}
 @media(max-width:390px){.nl-menu-grid .nl-tile .nl-tile-label{font-size:clamp(14px,3.9vw,17px)!important}.nl-menu-grid .nl-tile{min-height:168px!important}.nl-menu-grid{gap:10px!important}.nl-brand-name{font-size:8vw!important}}
+
+/* Banner prossimo GP: esclusivamente nel menu principale */
+.nl-next-banner{width:100%;margin:20px 0 0;min-height:143px;display:grid;grid-template-columns:minmax(0,1fr) 33% 40px;gap:8px;align-items:center;position:relative;overflow:hidden;text-align:left;padding:16px 12px 16px 17px;background:linear-gradient(125deg,#15151a 0%,#08090c 65%,#21070d 100%);border:2px solid #f6f6f8;border-radius:17px;box-shadow:0 0 15px #ffffff24,inset 0 0 18px #ffffff0c;color:#fff;cursor:pointer}
+.nl-next-banner::after{content:"";position:absolute;bottom:0;right:13%;width:28%;height:40%;background:repeating-linear-gradient(135deg,transparent 0 12px,#ee14321c 13px 19px,transparent 20px 28px);pointer-events:none}
+.nl-next-copy{position:relative;z-index:1;display:flex;flex-direction:column;align-items:flex-start;min-width:0;gap:3px}
+.nl-next-tag{font:italic 900 clamp(13px,3.5vw,19px)/1.1 'Arial Black',Arial,sans-serif;background:#f8f8fa;color:#09090b;padding:5px 9px;transform:skew(-8deg);margin-bottom:9px;white-space:nowrap}
+.nl-next-tag i{color:#ec1734;font-style:normal}
+.nl-next-copy strong{font:italic 900 clamp(20px,5.5vw,32px)/1.05 'Arial Black',Arial,sans-serif;overflow-wrap:anywhere}
+.nl-next-copy em{font:italic 900 clamp(14px,4vw,22px)/1.05 'Arial Black',Arial,sans-serif;color:#fa1936}
+.nl-next-copy small{font:italic 600 clamp(9px,2.5vw,13px)/1.2 Arial,sans-serif;color:#bcbcc3;max-width:100%}
+.nl-next-track{z-index:1;min-width:0;display:flex;align-items:center;justify-content:center;border-left:1px solid #6d6d73;padding-left:7px;min-height:92px}
+.nl-next-track img{width:100%;height:110px;object-fit:contain;filter:grayscale(1) brightness(0) invert(1);opacity:.95}
+.nl-next-go{z-index:1;background:#fff;color:#09090b;border-radius:10px;width:33px;height:48px;display:flex;align-items:center;justify-content:center;font:900 39px/1 Arial,sans-serif}
+.nl-next-banner:hover,.nl-next-banner:focus-visible{box-shadow:0 0 21px #ffffff55,inset 0 0 18px #ffffff15}
+body.nl-page-open .nl-next-banner{display:none!important}
+@media(max-width:390px){.nl-next-banner{grid-template-columns:minmax(0,1fr) 30% 29px;gap:5px;padding:12px 8px 12px 11px;min-height:128px}.nl-next-go{width:28px;height:42px}.nl-next-tag{font-size:12px}.nl-next-copy strong{font-size:19px}.nl-next-track img{height:90px}}
 </style>
 
 <link rel="manifest" href="manifest.json?v=2027icon2">
@@ -666,7 +682,12 @@ if ('serviceWorker' in navigator) {
  <button class="nl-tile" onclick="nlShow('teams')"><span class="nl-tile-icon"><img src="assets/menu/costruttori.png" alt="" loading="eager"></span><span class="nl-tile-label">CLASSIFICA<br>COSTRUTTORI</span><span class="nl-tile-arrow">➜</span></button>
  <button class="nl-tile" onclick="nlShow('calendar')"><span class="nl-tile-icon"><img src="assets/menu/calendario.png" alt="" loading="eager"></span><span class="nl-tile-label">CALENDARIO<br>2027</span><span class="nl-tile-arrow">➜</span></button>
  <button class="nl-tile" onclick="nlShow('last')"><span class="nl-tile-icon"><img src="assets/menu/ultima_gara.png" alt="" loading="eager"></span><span class="nl-tile-label">ULTIMA<br>GARA</span><span class="nl-tile-arrow">➜</span></button>
- </div><div class="nl-menu-footer"><span>NOZZOLEAGUE / 2027</span><span>BUONA GARA ◢</span></div>
+ </div>
+ <button id="nlNextBanner" class="nl-next-banner" type="button" onclick="nlOpenNextCircuit()" aria-label="Apri informazioni sul prossimo Gran Premio">
+  <div class="nl-next-copy"><span class="nl-next-tag">PROSSIMO GP <i>///</i></span><strong id="nlNextCountry">AUSTRALIA</strong><em id="nlNextCity">MELBOURNE</em><small id="nlNextCircuit">ALBERT PARK CIRCUIT</small></div>
+  <div class="nl-next-track"><img id="nlNextTrackImg" alt="Sagoma del prossimo circuito" src="assets/tracks/melbourne.png"></div><span class="nl-next-go" aria-hidden="true">›</span>
+ </button>
+ <div class="nl-menu-footer"><span>NOZZOLEAGUE / 2027</span></div>
 </nav><div id="nlBack" class="nl-back" hidden><button onclick="nlShow('menu')">‹ TORNA AL MENU</button></div>
   <main>
     <section class="main-grid" id="nlGrid">
@@ -1237,6 +1258,7 @@ function render(){
  const next=data.calendar.find(c=>c[2]==="Prossima")||data.calendar.find(c=>c[2]==="In attesa");
  nextName.textContent=next?next[1].toUpperCase():"CONCLUSO";
  nextRound.textContent=next?`ROUND ${next[0]}`:"";
+ nlUpdateNextBanner();
 
  lastGp.textContent=data.race.name.toUpperCase();
  lastUpdated.textContent="Ultimo aggiornamento: "+(data.lastUpdated||"—");
@@ -1261,6 +1283,19 @@ function buildEditors(){
  buildPresenceEditor();buildRaceEditor();nzSprintEditor()
 }
 
+function nlUpdateNextBanner(){
+ const banner=document.getElementById('nlNextBanner');if(!banner)return;
+ const next=currentNextRace();if(!next){banner.hidden=true;banner.style.display='none';return;}
+ banner.hidden=false;banner.style.removeProperty('display');
+ const round=Number(next[0]),track=nozzoCircuit(round);
+ document.getElementById('nlNextCountry').textContent=(track?.country||next[1]).toUpperCase();
+ document.getElementById('nlNextCity').textContent=(track?.city||'').toUpperCase();
+ document.getElementById('nlNextCircuit').textContent=(track?.circuit||'').toUpperCase();
+ const img=document.getElementById('nlNextTrackImg');const slug=nzLocalTrackFiles[round-1];
+ img.hidden=!slug;if(slug)img.src='assets/tracks/'+slug+'.png';
+ banner.setAttribute('aria-label','Informazioni circuito: '+(track?.country||next[1])+' — '+(track?.city||''));
+}
+function nlOpenNextCircuit(){const next=currentNextRace();if(next)nozzoCircuitDetails(Number(next[0]));}
 function currentNextRace(){
   return data.calendar.find(c=>c[2]==="Prossima") ||
          data.calendar.find(c=>c[2]==="In attesa") ||
