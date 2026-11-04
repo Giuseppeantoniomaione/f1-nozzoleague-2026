@@ -651,6 +651,47 @@ html,body{margin:0!important;min-height:100%!important;background:#08101e!import
 .nl-menu-grid .nl-tile .nl-tile-label{font-family:"Arial Black",Arial,sans-serif!important;font-style:italic!important;font-weight:1000!important;letter-spacing:-.6px!important;transform:skew(-7deg)!important;font-size:clamp(13px,3.35vw,23px)!important;line-height:1.12!important;overflow-wrap:normal!important}
 .nl-menu-grid .nl-tile .nl-tile-icon img{width:100%!important;height:100%!important;object-fit:contain!important}
 @media(max-width:390px){.nl-menu-grid .nl-tile .nl-tile-label{font-size:clamp(12px,3.25vw,15px)!important}}
+
+/* NOZZOLEAGUE 2027 — pannelli traslucidi sul tunnel originale.
+   Home fotografica esclusa; icone, testi e bordi rimangono opachi. */
+html body.nl-navigation{
+  background-color:#050506!important;
+  background-image:linear-gradient(180deg,rgba(0,0,0,.24),rgba(0,0,0,.42)),url("assets/tunnel-2027-hd.webp")!important;
+  background-position:center center!important;
+  background-size:cover!important;
+  background-repeat:no-repeat!important;
+  background-attachment:fixed!important;
+}
+body.nl-navigation:not(.nl-page-open)::before,
+body.nl-navigation:not(.nl-page-open)::after{display:none!important}
+body.nl-navigation .app{background:transparent!important}
+/* Menu: opacità 85%, mantenendo intatti bordi e bagliori. */
+body.nl-navigation:not(.nl-page-open) .nl-menu-grid .nl-tile{
+  background:linear-gradient(145deg,rgba(32,4,7,.85),rgba(8,8,10,.85) 63%)!important;
+  -webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);
+}
+/* Prossimo GP: opacità 80%, pulsante e bordo bianchi invariati. */
+body.nl-navigation:not(.nl-page-open) .nl-next-banner{
+  background:linear-gradient(125deg,rgba(21,21,26,.80),rgba(8,9,12,.80) 65%,rgba(33,7,13,.80))!important;
+  -webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);
+}
+/* Sezioni interne: 80% di opacità, senza modificare testi e risultati. */
+body.nl-navigation.nl-page-open .panel{
+  background:rgba(8,9,12,.80)!important;
+  -webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);
+}
+body.nl-navigation.nl-page-open th{background:rgba(26,29,31,.84)!important}
+body.nl-navigation.nl-page-open tbody tr:hover td{background:rgba(21,24,25,.78)!important}
+/* Manteniamo lo sfondo visibile anche su Safari iPhone. */
+@media(max-width:760px){
+  html body.nl-navigation{background-attachment:scroll!important}
+  body.nl-navigation::after{
+    content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background:linear-gradient(180deg,rgba(0,0,0,.24),rgba(0,0,0,.42)),url("assets/tunnel-2027-hd.webp") center/cover no-repeat!important;
+    display:block!important;
+  }
+  body.nl-navigation:not(.nl-page-open)::after{display:block!important}
+}
 </style><script id="nozzo-no-serviceworker">
 // Disable obsolete offline worker without deleting league results stored locally.
 if ('serviceWorker' in navigator) {
