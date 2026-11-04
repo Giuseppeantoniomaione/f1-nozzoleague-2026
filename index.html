@@ -565,6 +565,11 @@ body.nl-navigation.nl-page-open .header .gear{flex:0 0 auto;width:45px;height:45
  body.nl-navigation.nl-page-open .header .gear{width:38px;height:38px;font-size:21px}
 }
 @media(max-width:355px){.nl-inner-f1{width:50px}.nl-inner-name{font-size:14px}.nl-inner-year{font-size:17px}}
+
+/* Dissolvenza navigazione: il tunnel fisso non viene animato. */
+#nlPageFade{position:fixed;inset:0;z-index:9990;background:#050506;opacity:0;pointer-events:none;transition:opacity 190ms ease-in-out;}
+#nlPageFade.nl-fade-visible{opacity:1;}
+@media(prefers-reduced-motion:reduce){#nlPageFade{transition:none;}}
 </style>
 
 <link rel="manifest" href="manifest.json?v=2027icon2">
@@ -743,6 +748,7 @@ if ('serviceWorker' in navigator) {
 </script></head>
 <body>
 <div id="nl-fixed-tunnel" aria-hidden="true"></div>
+<div id="nlPageFade" aria-hidden="true"></div>
 
 <div class="home-screen" id="homeScreen">
   <div class="home-bg-blur"></div>
@@ -1974,13 +1980,31 @@ render();
 
 <script>
 /* Navigazione 2027: non cambia dati, classifiche, storico o editor */
-function nlShow(page){
+/* Dissolvenza tra menu e sezioni, senza spostare lo sfondo del tunnel. */
+let nlCurrentPage='menu';
+let nlTransitioning=false;
+function nlApplyPage(page){
  const pages=['drivers','teams','calendar','last'];const valid=pages.includes(page);
  document.body.classList.add('nl-navigation');document.body.classList.toggle('nl-page-open',valid);
  document.querySelectorAll('[data-nl-page]').forEach(el=>el.classList.toggle('nl-active',valid&&el.dataset.nlPage===page));
  const back=document.getElementById('nlBack');if(back)back.hidden=!valid;
+ nlCurrentPage=valid?page:'menu';
  window.scrollTo({top:0,behavior:'instant'});
 }
-function nlInit(){nlShow('menu')}
+function nlShow(page){
+ const target=['drivers','teams','calendar','last'].includes(page)?page:'menu';
+ if(nlTransitioning || (target===nlCurrentPage && document.body.classList.contains('nl-navigation')))return;
+ if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){nlApplyPage(target);return;}
+ const veil=document.getElementById('nlPageFade');
+ if(!veil){nlApplyPage(target);return;}
+ nlTransitioning=true;
+ veil.classList.add('nl-fade-visible');
+ setTimeout(()=>{
+   nlApplyPage(target);
+   requestAnimationFrame(()=>requestAnimationFrame(()=>veil.classList.remove('nl-fade-visible')));
+   setTimeout(()=>{nlTransitioning=false;},250);
+ },190);
+}
+function nlInit(){nlApplyPage('menu')}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',nlInit);else nlInit();
 </script></body></html>
