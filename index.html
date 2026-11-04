@@ -570,11 +570,12 @@ body.nl-navigation.nl-page-open .header .gear{flex:0 0 auto;width:45px;height:45
 #homeScreen{transition:transform 300ms cubic-bezier(.22,.61,.36,1)!important;will-change:transform;transform:translate3d(0,0,0);opacity:1!important;visibility:visible!important;backface-visibility:hidden;}
 #homeScreen.hidden{transform:translate3d(-101%,0,0)!important;opacity:1!important;visibility:visible!important;pointer-events:none!important;}
 @media(prefers-reduced-motion:reduce){#homeScreen{transition:none!important}}
-/* Navigazione universale: CSS transform, senza View Transitions API. */
-.app.nl-slide-out-left{animation:nlExitLeft 155ms cubic-bezier(.4,0,.8,.5) both!important;pointer-events:none}
-.app.nl-slide-out-right{animation:nlExitRight 155ms cubic-bezier(.4,0,.8,.5) both!important;pointer-events:none}
-.app.nl-slide-in-left{animation:nlEnterLeft 155ms cubic-bezier(.2,.5,.3,1) both!important;pointer-events:none}
-.app.nl-slide-in-right{animation:nlEnterRight 155ms cubic-bezier(.2,.5,.3,1) both!important;pointer-events:none}
+/* Navigazione universale: scorrimento morbido GPU, senza View Transitions API. */
+.app.nl-slide-out-left,.app.nl-slide-out-right,.app.nl-slide-in-left,.app.nl-slide-in-right{will-change:transform;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.app.nl-slide-out-left{animation:nlExitLeft 235ms cubic-bezier(.45,0,.7,.3) both!important;pointer-events:none}
+.app.nl-slide-out-right{animation:nlExitRight 235ms cubic-bezier(.45,0,.7,.3) both!important;pointer-events:none}
+.app.nl-slide-in-left{animation:nlEnterLeft 260ms cubic-bezier(.16,1,.3,1) both!important;pointer-events:none}
+.app.nl-slide-in-right{animation:nlEnterRight 260ms cubic-bezier(.16,1,.3,1) both!important;pointer-events:none}
 @keyframes nlExitLeft{from{transform:translate3d(0,0,0)}to{transform:translate3d(-105vw,0,0)}}
 @keyframes nlExitRight{from{transform:translate3d(0,0,0)}to{transform:translate3d(105vw,0,0)}}
 @keyframes nlEnterLeft{from{transform:translate3d(-105vw,0,0)}to{transform:translate3d(0,0,0)}}
@@ -2086,10 +2087,10 @@ function nlShow(page){
    let finished=false;
    function finish(){if(finished)return;finished=true;app.classList.remove(enterClass);nlTransitioning=false;}
    app.addEventListener('animationend',function onEnter(e){if(e.target!==app)return;app.removeEventListener('animationend',onEnter);finish();},{once:true});
-   setTimeout(finish,210);
+   setTimeout(finish,340);
  }
  app.addEventListener('animationend',function onExit(e){if(e.target!==app)return;app.removeEventListener('animationend',onExit);swap();},{once:true});
- setTimeout(swap,210);
+ setTimeout(swap,310);
 }
 function nlInit(){nlApplyPage('menu')}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',nlInit);else nlInit();
