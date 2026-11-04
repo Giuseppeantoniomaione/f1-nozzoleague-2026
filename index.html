@@ -692,6 +692,36 @@ body.nl-navigation.nl-page-open tbody tr:hover td{background:rgba(21,24,25,.78)!
   }
   body.nl-navigation:not(.nl-page-open)::after{display:block!important}
 }
+
+/* Correzione tunnel fisso: un unico livello dietro menu e pagine interne. */
+html:has(body.nl-navigation){background:#050506!important}
+html body.nl-navigation{
+  background:#050506!important;
+  background-image:none!important;
+  position:relative;
+  isolation:isolate;
+}
+body.nl-navigation::before{
+  content:""!important;
+  display:block!important;
+  position:fixed!important;
+  inset:0!important;
+  width:100%!important;
+  height:100vh!important;
+  height:100dvh!important;
+  z-index:0!important;
+  pointer-events:none!important;
+  background:linear-gradient(180deg,rgba(0,0,0,.24),rgba(0,0,0,.42)),url("assets/tunnel-2027-hd.webp") center center / cover no-repeat!important;
+}
+body.nl-navigation::after{display:none!important;content:none!important}
+body.nl-navigation .app{position:relative!important;z-index:1!important;background:transparent!important}
+body.nl-navigation:not(.nl-page-open) .nl-menu{background:transparent!important}
+body.nl-navigation .home-screen{z-index:9999!important}
+@media(max-width:760px){
+  html body.nl-navigation{background:#050506!important;background-image:none!important}
+  body.nl-navigation::before{display:block!important;position:fixed!important;z-index:0!important}
+  body.nl-navigation::after{display:none!important}
+}
 </style><script id="nozzo-no-serviceworker">
 // Disable obsolete offline worker without deleting league results stored locally.
 if ('serviceWorker' in navigator) {
