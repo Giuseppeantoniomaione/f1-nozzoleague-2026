@@ -566,10 +566,16 @@ body.nl-navigation.nl-page-open .header .gear{flex:0 0 auto;width:45px;height:45
 }
 @media(max-width:355px){.nl-inner-f1{width:50px}.nl-inner-name{font-size:14px}.nl-inner-year{font-size:17px}}
 
-/* Dissolvenza navigazione: il tunnel fisso non viene animato. */
-#nlPageFade{position:fixed;inset:0;z-index:9990;background:#050506;opacity:0;pointer-events:none;transition:opacity 85ms ease-in-out;}
-#nlPageFade.nl-fade-visible{opacity:1;}
-@media(prefers-reduced-motion:reduce){#nlPageFade{transition:none;}}
+/* Navigazione laterale rapida: il tunnel rimane fisso. */
+.app.nl-slide-out-forward{animation:nlOutForward 85ms ease-in both}
+.app.nl-slide-in-forward{animation:nlInForward 155ms cubic-bezier(.2,.7,.25,1) both}
+.app.nl-slide-out-back{animation:nlOutBack 85ms ease-in both}
+.app.nl-slide-in-back{animation:nlInBack 155ms cubic-bezier(.2,.7,.25,1) both}
+@keyframes nlOutForward{to{transform:translateX(-18px);opacity:.35}}
+@keyframes nlInForward{from{transform:translateX(34px);opacity:.35}to{transform:translateX(0);opacity:1}}
+@keyframes nlOutBack{to{transform:translateX(18px);opacity:.35}}
+@keyframes nlInBack{from{transform:translateX(-34px);opacity:.35}to{transform:translateX(0);opacity:1}}
+@media(prefers-reduced-motion:reduce){.app.nl-slide-out-forward,.app.nl-slide-in-forward,.app.nl-slide-out-back,.app.nl-slide-in-back{animation:none}}
 </style>
 
 <link rel="manifest" href="manifest.json?v=2027icon2">
@@ -758,7 +764,7 @@ if ('serviceWorker' in navigator) {
     }).catch(function () {});
   });
 }
-</script><meta name="nozzoleague-build" content="20261104-cache-refresh-1">
+</script><meta name="nozzoleague-build" content="20261104-slide-navigation-2">
 <script id="nozzo-fresh-launch">
 /* Controlla la versione online senza cancellare risultati o impostazioni locali. */
 (function () {
@@ -2025,7 +2031,7 @@ render();
 
 <script>
 /* Navigazione 2027: non cambia dati, classifiche, storico o editor */
-/* Dissolvenza tra menu e sezioni, senza spostare lo sfondo del tunnel. */
+/* Le pagine entrano da destra; tornando al menu escono verso destra. */
 let nlCurrentPage='menu';
 let nlTransitioning=false;
 function nlApplyPage(page){
@@ -2039,15 +2045,17 @@ function nlApplyPage(page){
 function nlShow(page){
  const target=['drivers','teams','calendar','last'].includes(page)?page:'menu';
  if(nlTransitioning || (target===nlCurrentPage && document.body.classList.contains('nl-navigation')))return;
- if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){nlApplyPage(target);return;}
- const veil=document.getElementById('nlPageFade');
- if(!veil){nlApplyPage(target);return;}
+ const app=document.querySelector('.app');
+ if(!app || window.matchMedia('(prefers-reduced-motion: reduce)').matches){nlApplyPage(target);return;}
+ const backwards=target==='menu';
+ const suffix=backwards?'back':'forward';
  nlTransitioning=true;
- veil.classList.add('nl-fade-visible');
+ app.classList.add('nl-slide-out-'+suffix);
  setTimeout(()=>{
+   app.classList.remove('nl-slide-out-'+suffix);
    nlApplyPage(target);
-   requestAnimationFrame(()=>requestAnimationFrame(()=>veil.classList.remove('nl-fade-visible')));
-   setTimeout(()=>{nlTransitioning=false;},105);
+   app.classList.add('nl-slide-in-'+suffix);
+   setTimeout(()=>{app.classList.remove('nl-slide-in-'+suffix);nlTransitioning=false;},165);
  },85);
 }
 function nlInit(){nlApplyPage('menu')}
