@@ -774,36 +774,46 @@ if ('serviceWorker' in navigator) {
     }).catch(function () {});
   });
 }
-</script><meta name="nozzoleague-build" content="20261104-menu-full-edge-slide-5">
+</script><meta name="nozzoleague-build" content="20261104-auto-update-v2">
 <script id="nozzo-fresh-launch">
-/* Controlla la versione online senza cancellare risultati o impostazioni locali. */
+/* Aggiornamento web app: controlla l'HTML online, senza toccare localStorage. */
 (function () {
-  const build = document.querySelector('meta[name="nozzoleague-build"]').content;
+  const meta = document.querySelector('meta[name="nozzoleague-build"]');
+  const build = meta && meta.content;
+  if (!build) return;
   let checking = false;
   let lastCheck = 0;
-  async function checkLatest() {
-    if (checking || !navigator.onLine || Date.now() - lastCheck < 12000) return;
+  let navigating = false;
+  const base = new URL('./index.html', document.baseURI);
+  async function checkLatest(force) {
+    if (checking || navigating || !navigator.onLine || (!force && Date.now() - lastCheck < 30000)) return;
     checking = true;
     lastCheck = Date.now();
     try {
-      const url = new URL(window.location.href);
-      url.searchParams.set('_nl_check', String(Date.now()));
-      const response = await fetch(url.href, {cache:'no-store', credentials:'same-origin'});
+      const checkURL = new URL(base.href);
+      checkURL.searchParams.set('_nl_check', String(Date.now()));
+      const response = await fetch(checkURL.href, {cache:'no-store', credentials:'same-origin', redirect:'follow'});
       if (!response.ok) return;
       const html = await response.text();
       const match = html.match(/<meta\s+name=["']nozzoleague-build["']\s+content=["']([^"']+)["']/i);
       if (!match || match[1] === build) return;
-      const target = new URL(window.location.href);
-      target.searchParams.delete('_nl_check');
+      navigating = true;
+      const target = new URL(base.href);
       target.searchParams.set('nl_version', match[1]);
-      if (target.href !== window.location.href) window.location.replace(target.href);
-    } catch (err) { /* Offline: usa normalmente la versione disponibile. */ }
+      target.searchParams.set('nl_refresh', String(Date.now()));
+      window.location.replace(target.href);
+    } catch (_) { /* Senza rete continua a funzionare la versione disponibile. */ }
     finally { checking = false; }
   }
-  window.addEventListener('pageshow', checkLatest);
-  document.addEventListener('visibilitychange', function () {
-    if (document.visibilityState === 'visible') checkLatest();
+  // Anche le app installate su Home possono restare aperte in background.
+  window.addEventListener('pageshow', () => checkLatest(true));
+  window.addEventListener('focus', () => checkLatest(false));
+  window.addEventListener('online', () => checkLatest(true));
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') checkLatest(true);
   });
+  // Recupera anche i casi in cui iOS non emette un evento di riapertura.
+  setInterval(() => { if (document.visibilityState === 'visible') checkLatest(false); }, 60000);
 })();
 </script>
 </head>
