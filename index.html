@@ -566,11 +566,15 @@ body.nl-navigation.nl-page-open .header .gear{flex:0 0 auto;width:45px;height:45
 }
 @media(max-width:355px){.nl-inner-f1{width:50px}.nl-inner-name{font-size:14px}.nl-inner-year{font-size:17px}}
 
+/* Homepage: scorre interamente oltre il bordo sinistro, senza dissolvenza. */
+#homeScreen{transition:transform 300ms cubic-bezier(.22,.61,.36,1)!important;will-change:transform;transform:translate3d(0,0,0);opacity:1!important;visibility:visible!important;backface-visibility:hidden;}
+#homeScreen.hidden{transform:translate3d(-101%,0,0)!important;opacity:1!important;visibility:visible!important;pointer-events:none!important;}
+@media(prefers-reduced-motion:reduce){#homeScreen{transition:none!important}}
 /* Navigazione fluida: snapshot simultanei delle schermate, tunnel fisso. */
 .app{view-transition-name:nl-content}
 ::view-transition-old(root),::view-transition-new(root){animation:none!important}
 ::view-transition-old(nl-content),::view-transition-new(nl-content){
-  animation-duration:230ms;animation-timing-function:cubic-bezier(.22,.75,.24,1);
+  animation-duration:270ms;animation-timing-function:cubic-bezier(.22,.61,.36,1);
   animation-fill-mode:both;mix-blend-mode:normal;
 }
 html.nl-moving-forward::view-transition-old(nl-content){animation-name:nlOldForward}
@@ -579,8 +583,8 @@ html.nl-moving-back::view-transition-old(nl-content){animation-name:nlOldBack}
 html.nl-moving-back::view-transition-new(nl-content){animation-name:nlNewBack}
 @keyframes nlOldForward{to{transform:translate3d(-24%,0,0);opacity:.55}}
 @keyframes nlNewForward{from{transform:translate3d(100%,0,0);opacity:1}to{transform:translate3d(0,0,0);opacity:1}}
-@keyframes nlOldBack{to{transform:translate3d(100%,0,0);opacity:1}}
-@keyframes nlNewBack{from{transform:translate3d(-24%,0,0);opacity:.55}to{transform:translate3d(0,0,0);opacity:1}}
+@keyframes nlOldBack{from{transform:translate3d(0,0,0)}to{transform:translate3d(100%,0,0)}}
+@keyframes nlNewBack{from{transform:translate3d(-12%,0,0)}to{transform:translate3d(0,0,0)}}
 @media(prefers-reduced-motion:reduce){.app{view-transition-name:none}}
 </style>
 
@@ -770,7 +774,7 @@ if ('serviceWorker' in navigator) {
     }).catch(function () {});
   });
 }
-</script><meta name="nozzoleague-build" content="20261104-smooth-navigation-3">
+</script><meta name="nozzoleague-build" content="20261104-edge-slide-4">
 <script id="nozzo-fresh-launch">
 /* Controlla la versione online senza cancellare risultati o impostazioni locali. */
 (function () {
@@ -1265,7 +1269,7 @@ function enterLeague(){
   const home=document.getElementById("homeScreen");
   if(!home) return;
   home.classList.add("hidden");
-  setTimeout(()=>{home.style.display="none";},380);
+  setTimeout(()=>{home.style.display="none";home.style.willChange="auto";},320);
 }
 
 
