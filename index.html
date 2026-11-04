@@ -765,16 +765,7 @@ body.nl-navigation::before,body.nl-navigation::after{content:none!important;disp
 body.nl-navigation .app{position:relative!important;z-index:1!important;background:transparent!important}
 body.nl-navigation:not(.nl-page-open) .nl-menu{background:transparent!important}
 body.nl-navigation .home-screen{z-index:9999!important}
-</style><script id="nozzo-no-serviceworker">
-// Disable obsolete offline worker without deleting league results stored locally.
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function () {
-    navigator.serviceWorker.getRegistrations().then(function (regs) {
-      regs.forEach(function (reg) { reg.unregister(); });
-    }).catch(function () {});
-  });
-}
-</script><meta name="nozzoleague-build" content="20261104-auto-update-v2">
+</style><meta name="nozzoleague-build" content="20261104-pwa-network-first-v3">
 <script id="nozzo-fresh-launch">
 /* Aggiornamento web app: controlla l'HTML online, senza toccare localStorage. */
 (function () {
@@ -814,6 +805,24 @@ if ('serviceWorker' in navigator) {
   });
   // Recupera anche i casi in cui iOS non emette un evento di riapertura.
   setInterval(() => { if (document.visibilityState === 'visible') checkLatest(false); }, 60000);
+})();
+</script>
+<script id="nozzo-service-worker-registration">
+(function(){
+  if(!('serviceWorker' in navigator) || !window.isSecureContext) return;
+  let refreshing=false;
+  navigator.serviceWorker.addEventListener('controllerchange',function(){
+    if(!refreshing){refreshing=true;window.location.reload();}
+  });
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.register('./service-worker.js',{updateViaCache:'none'})
+      .then(function(reg){
+        function check(){reg.update().catch(function(){});}
+        document.addEventListener('visibilitychange',function(){if(!document.hidden)check();});
+        window.addEventListener('pageshow',check);
+        check();
+      }).catch(function(err){console.warn('Aggiornamento offline non disponibile:',err);});
+  });
 })();
 </script>
 </head>
