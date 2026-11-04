@@ -570,17 +570,18 @@ body.nl-navigation.nl-page-open .header .gear{flex:0 0 auto;width:45px;height:45
 #homeScreen{transition:transform 300ms cubic-bezier(.22,.61,.36,1)!important;will-change:transform;transform:translate3d(0,0,0);opacity:1!important;visibility:visible!important;backface-visibility:hidden;}
 #homeScreen.hidden{transform:translate3d(-101%,0,0)!important;opacity:1!important;visibility:visible!important;pointer-events:none!important;}
 @media(prefers-reduced-motion:reduce){#homeScreen{transition:none!important}}
-/* Navigazione universale: scorrimento morbido GPU, senza View Transitions API. */
-.app.nl-slide-out-left,.app.nl-slide-out-right,.app.nl-slide-in-left,.app.nl-slide-in-right{will-change:transform;backface-visibility:hidden;-webkit-backface-visibility:hidden}
-.app.nl-slide-out-left{animation:nlExitLeft 235ms cubic-bezier(.45,0,.7,.3) both!important;pointer-events:none}
-.app.nl-slide-out-right{animation:nlExitRight 235ms cubic-bezier(.45,0,.7,.3) both!important;pointer-events:none}
-.app.nl-slide-in-left{animation:nlEnterLeft 260ms cubic-bezier(.16,1,.3,1) both!important;pointer-events:none}
-.app.nl-slide-in-right{animation:nlEnterRight 260ms cubic-bezier(.16,1,.3,1) both!important;pointer-events:none}
-@keyframes nlExitLeft{from{transform:translate3d(0,0,0)}to{transform:translate3d(-105vw,0,0)}}
-@keyframes nlExitRight{from{transform:translate3d(0,0,0)}to{transform:translate3d(105vw,0,0)}}
-@keyframes nlEnterLeft{from{transform:translate3d(-105vw,0,0)}to{transform:translate3d(0,0,0)}}
-@keyframes nlEnterRight{from{transform:translate3d(105vw,0,0)}to{transform:translate3d(0,0,0)}}
-@media(prefers-reduced-motion:reduce){.app.nl-slide-out-left,.app.nl-slide-out-right,.app.nl-slide-in-left,.app.nl-slide-in-right{animation:none!important}}
+/* Navigazione a due schermate simultanee: movimento continuo dai bordi. */
+.app.nl-slide-in-left,.app.nl-slide-in-right{will-change:transform;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.app.nl-slide-in-left{animation:nlEnterLeft 430ms cubic-bezier(.35,0,.2,1) both!important;pointer-events:none}
+.app.nl-slide-in-right{animation:nlEnterRight 430ms cubic-bezier(.35,0,.2,1) both!important;pointer-events:none}
+.nl-transition-old{position:fixed!important;left:0!important;right:0!important;z-index:9000!important;pointer-events:none!important;will-change:transform;backface-visibility:hidden;-webkit-backface-visibility:hidden;contain:layout style paint}
+.nl-transition-old.nl-old-left{animation:nlExitLeft 430ms cubic-bezier(.35,0,.2,1) both!important}
+.nl-transition-old.nl-old-right{animation:nlExitRight 430ms cubic-bezier(.35,0,.2,1) both!important}
+@keyframes nlExitLeft{from{transform:translate3d(0,0,0)}to{transform:translate3d(-100vw,0,0)}}
+@keyframes nlExitRight{from{transform:translate3d(0,0,0)}to{transform:translate3d(100vw,0,0)}}
+@keyframes nlEnterLeft{from{transform:translate3d(-100vw,0,0)}to{transform:translate3d(0,0,0)}}
+@keyframes nlEnterRight{from{transform:translate3d(100vw,0,0)}to{transform:translate3d(0,0,0)}}
+@media(prefers-reduced-motion:reduce){.app.nl-slide-in-left,.app.nl-slide-in-right,.nl-transition-old{animation:none!important}}
 </style>
 
 <link rel="manifest" href="manifest.json?v=20261104-approved-home">
@@ -2075,22 +2076,34 @@ function nlShow(page){
  }
  nlTransitioning=true;
  const back=target==='menu';
- const exitClass=back?'nl-slide-out-right':'nl-slide-out-left';
+ const old=app.cloneNode(true);
+ // Il vecchio schermo resta visibile mentre quello nuovo entra dall'altro bordo.
+ const rect=app.getBoundingClientRect();
+ old.removeAttribute('id');
+ old.setAttribute('aria-hidden','true');
+ old.classList.add('nl-transition-old',back?'nl-old-right':'nl-old-left');
+ old.style.top=rect.top+'px';
+ old.style.width=rect.width+'px';
+ old.style.height=app.offsetHeight+'px';
+ old.style.margin='0';
+ old.style.maxWidth='none';
+ document.body.appendChild(old);
+ nlApplyPage(target);
  const enterClass=back?'nl-slide-in-left':'nl-slide-in-right';
- app.classList.add(exitClass);
- let done=false;
- function swap(){
-   if(done)return;done=true;
-   app.classList.remove(exitClass);
-   nlApplyPage(target);
-   app.classList.add(enterClass);
-   let finished=false;
-   function finish(){if(finished)return;finished=true;app.classList.remove(enterClass);nlTransitioning=false;}
-   app.addEventListener('animationend',function onEnter(e){if(e.target!==app)return;app.removeEventListener('animationend',onEnter);finish();},{once:true});
-   setTimeout(finish,340);
+ app.classList.add(enterClass);
+ let finished=false;
+ function finish(){
+   if(finished)return;finished=true;
+   app.classList.remove(enterClass);
+   old.remove();
+   nlTransitioning=false;
  }
- app.addEventListener('animationend',function onExit(e){if(e.target!==app)return;app.removeEventListener('animationend',onExit);swap();},{once:true});
- setTimeout(swap,310);
+ app.addEventListener('animationend',function onEnter(e){
+   if(e.target!==app)return;
+   app.removeEventListener('animationend',onEnter);
+   finish();
+ },{once:true});
+ setTimeout(finish,540);
 }
 function nlInit(){nlApplyPage('menu')}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',nlInit);else nlInit();
